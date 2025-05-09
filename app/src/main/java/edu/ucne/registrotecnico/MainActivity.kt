@@ -254,7 +254,7 @@ interface TecnicoDao {
     fun getAll(): Flow<List<TecnicoEntity>>
 }
 
-@Database(
+@Database( 
     entities = [TecnicoEntity::class],
     version = 1,
     exportSchema = false
