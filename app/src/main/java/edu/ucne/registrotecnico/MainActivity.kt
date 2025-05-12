@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TecnicoScreen(tecnicoDb: TecnicoDb) {
     var nombre by remember { mutableStateOf("") }
-    var sueldoText by remember { mutableStateOf("") }
+    var sueldo by remember { mutableStateOf(0.0) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var editando by remember { mutableStateOf<TecnicoEntity?>(null) }
     val scope = rememberCoroutineScope()
@@ -66,7 +66,8 @@ fun TecnicoScreen(tecnicoDb: TecnicoDb) {
                 .fillMaxWidth()
                 .padding(innerPadding)
                 .padding(8.dp)
-        ) {
+        )
+        {
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -84,10 +85,17 @@ fun TecnicoScreen(tecnicoDb: TecnicoDb) {
 
                     OutlinedTextField(
                         label = { Text("Sueldo del técnico") },
-                        value = sueldoText,
-                        onValueChange = { sueldoText = it },
+                        value = sueldo.toString(),
+                        onValueChange = {
+
+                            val newValue = it.toDoubleOrNull()
+                            if (newValue != null) {
+                                sueldo = newValue
+                            }
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
+
 
                     Spacer(modifier = Modifier.padding(2.dp))
 
@@ -99,7 +107,7 @@ fun TecnicoScreen(tecnicoDb: TecnicoDb) {
                         OutlinedButton(
                             onClick = {
                                 nombre = ""
-                                sueldoText = ""
+                                sueldo = 0.0
                                 errorMessage = null
                                 editando = null
                             }
@@ -108,6 +116,7 @@ fun TecnicoScreen(tecnicoDb: TecnicoDb) {
                             Text("Nuevo")
                         }
 
+
                         OutlinedButton(
                             onClick = {
                                 if (nombre.isBlank()) {
@@ -115,8 +124,7 @@ fun TecnicoScreen(tecnicoDb: TecnicoDb) {
                                     return@OutlinedButton
                                 }
 
-                                val sueldo = sueldoText.toDoubleOrNull()
-                                if (sueldo == null) {
+                                if (sueldo == 0.0) {
                                     errorMessage = "El sueldo debe tener un valor válido."
                                     return@OutlinedButton
                                 }
@@ -131,7 +139,7 @@ fun TecnicoScreen(tecnicoDb: TecnicoDb) {
                                         )
                                     )
                                     nombre = ""
-                                    sueldoText = ""
+                                    sueldo = 0.0
                                     errorMessage = null
                                     editando = null
                                 }
@@ -148,7 +156,7 @@ fun TecnicoScreen(tecnicoDb: TecnicoDb) {
                 tecnicoList,
                 onEdit = { tecnico ->
                     nombre = tecnico.nombre
-                    sueldoText = tecnico.sueldo.toString()
+                    sueldo = tecnico.sueldo
                     editando = tecnico
                 },
                 onDelete = { tecnico ->
@@ -227,9 +235,14 @@ fun TecnicoRow(
     HorizontalDivider()
 }
 
+
+
 suspend fun saveTecnico(tecnicoDb: TecnicoDb, tecnico: TecnicoEntity) {
     tecnicoDb.tecnicoDao().save(tecnico)
 }
+
+
+
 
 @Entity(tableName = "Tecnicos")
 data class TecnicoEntity(
@@ -254,11 +267,13 @@ interface TecnicoDao {
     fun getAll(): Flow<List<TecnicoEntity>>
 }
 
-@Database( 
+
+@Database(
     entities = [TecnicoEntity::class],
     version = 1,
     exportSchema = false
 )
+
 abstract class TecnicoDb : RoomDatabase() {
     abstract fun tecnicoDao(): TecnicoDao
 }
