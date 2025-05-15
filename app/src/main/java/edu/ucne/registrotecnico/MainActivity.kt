@@ -1,5 +1,6 @@
 package edu.ucne.registrotecnico
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.room.*
+import edu.ucne.registrotecnico.data.local.database.TecnicoDb
+import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
+import edu.ucne.registrotecnico.presentation.tecnico.TecnicoScreen
 import edu.ucne.registrotecnico.ui.theme.RegistroTecnicoTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -51,229 +55,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun TecnicoScreen(tecnicoDb: TecnicoDb) {
-    var nombre by remember { mutableStateOf("") }
-    var sueldo by remember { mutableStateOf(0.0) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-    var editando by remember { mutableStateOf<TecnicoEntity?>(null) }
-    val scope = rememberCoroutineScope()
-    val tecnicoList by tecnicoDb.tecnicoDao().getAll().collectAsState(initial = emptyList())
-
-    Scaffold { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(innerPadding)
-                .padding(8.dp)
-        )
-        {
-            ElevatedCard(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                ) {
-                    OutlinedTextField(
-                        label = { Text("Nombre del técnico") },
-                        value = nombre,
-                        onValueChange = { nombre = it },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    OutlinedTextField(
-                        label = { Text("Sueldo del técnico") },
-                        value = sueldo.toString(),
-                        onValueChange = {
-
-                            val newValue = it.toDoubleOrNull()
-                            if (newValue != null) {
-                                sueldo = newValue
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-
-                    Spacer(modifier = Modifier.padding(2.dp))
-
-                    errorMessage?.let {
-                        Text(text = it, color = Color.Red)
-                    }
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        OutlinedButton(
-                            onClick = {
-                                nombre = ""
-                                sueldo = 0.0
-                                errorMessage = null
-                                editando = null
-                            }
-                        ) {
-                            Icon(Icons.Default.Add, contentDescription = "Nuevo")
-                            Text("Nuevo")
-                        }
-
-
-                        OutlinedButton(
-                            onClick = {
-                                if (nombre.isBlank()) {
-                                    errorMessage = "El nombre no puede estar vacío."
-                                    return@OutlinedButton
-                                }
-
-                                if (sueldo == 0.0) {
-                                    errorMessage = "El sueldo debe tener un valor válido."
-                                    return@OutlinedButton
-                                }
-
-                                scope.launch {
-                                    saveTecnico(
-                                        tecnicoDb,
-                                        TecnicoEntity(
-                                            tecnicoId = editando?.tecnicoId,
-                                            nombre = nombre,
-                                            sueldo = sueldo
-                                        )
-                                    )
-                                    nombre = ""
-                                    sueldo = 0.0
-                                    errorMessage = null
-                                    editando = null
-                                }
-                            }
-                        ) {
-                            Icon(Icons.Default.Edit, contentDescription = "Guardar")
-                            Text("Guardar")
-                        }
-                    }
-                }
-            }
-
-            TecnicoListScreen(
-                tecnicoList,
-                onEdit = { tecnico ->
-                    nombre = tecnico.nombre
-                    sueldo = tecnico.sueldo
-                    editando = tecnico
-                },
-                onDelete = { tecnico ->
-                    scope.launch {
-                        tecnicoDb.tecnicoDao().delete(tecnico)
-                    }
-                }
-            )
-        }
-    }
-}
-
-@Composable
-fun TecnicoListScreen(
-    tecnicoList: List<TecnicoEntity>,
-    onEdit: (TecnicoEntity) -> Unit,
-    onDelete: (TecnicoEntity) -> Unit
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Lista de técnicos",
-            style = MaterialTheme.typography.headlineSmall
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(tecnicoList) { tecnico ->
-                TecnicoRow(tecnico, onEdit, onDelete)
-            }
-        }
-    }
-}
-
-@Composable
-fun TecnicoRow(
-    tecnico: TecnicoEntity,
-    onEdit: (TecnicoEntity) -> Unit,
-    onDelete: (TecnicoEntity) -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    ) {
-        Text(
-            modifier = Modifier.weight(1f),
-            text = tecnico.tecnicoId?.toString() ?: "N/A"
-        )
-        Text(
-            modifier = Modifier.weight(2f),
-            text = tecnico.nombre,
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Text(
-            modifier = Modifier.weight(1f),
-            text = tecnico.sueldo.toString()
-        )
-
-        IconButton(onClick = { onEdit(tecnico) }) {
-            Icon(
-                imageVector = Icons.Default.Edit,
-                contentDescription = "Editar técnico",
-                tint = Color.Blue
-            )
-        }
-        IconButton(onClick = { onDelete(tecnico) }) {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = "Eliminar técnico",
-                tint = Color.Red
-            )
-        }
-    }
-    HorizontalDivider()
-}
-
-
-
-suspend fun saveTecnico(tecnicoDb: TecnicoDb, tecnico: TecnicoEntity) {
-    tecnicoDb.tecnicoDao().save(tecnico)
-}
 
 
 
 
-@Entity(tableName = "Tecnicos")
-data class TecnicoEntity(
-    @PrimaryKey(autoGenerate = true)
-    val tecnicoId: Int? = null,
-    val nombre: String = "",
-    val sueldo: Double
-)
-
-@Dao
-interface TecnicoDao {
-    @Upsert
-    suspend fun save(tecnicos: TecnicoEntity)
-
-    @Query("SELECT * FROM Tecnicos WHERE tecnicoId = :id LIMIT 1")
-    suspend fun find(id: Int): TecnicoEntity
-
-    @Delete
-    suspend fun delete(tecnicos: TecnicoEntity)
-
-    @Query("SELECT * FROM Tecnicos")
-    fun getAll(): Flow<List<TecnicoEntity>>
-}
 
 
-@Database(
-    entities = [TecnicoEntity::class],
-    version = 1,
-    exportSchema = false
-)
 
-abstract class TecnicoDb : RoomDatabase() {
-    abstract fun tecnicoDao(): TecnicoDao
-}
+
+
+
+
