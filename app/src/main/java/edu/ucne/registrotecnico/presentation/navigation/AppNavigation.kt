@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import edu.ucne.registrotecnico.data.local.database.TecnicoDb
+import edu.ucne.registrotecnico.presentation.tecnico.TecnicoScreen
 import edu.ucne.registrotecnico.presentation.ticket.TicketScreen
 
 @Composable
@@ -19,11 +20,11 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
 
         composable("tecnicos") {
 
-            TecnicosNavHost(navHostController = navController, tecnicoDb = tecnicoDb)
+            TecnicoScreen(tecnicoId = null, tecnicoDb = tecnicoDb)
         }
 
         composable("tickets") {
-            TikcetNavHost(navHostController = navController, ticketDb = tecnicoDb)
+            TicketScreen(ticketId = null, ticketDb = tecnicoDb)
         }
     }
 }
