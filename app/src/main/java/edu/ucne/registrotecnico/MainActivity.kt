@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(innerPadding)
                     ) {
-                        TecnicoScreen(tecnicoDb)
+                        TecnicoScreen(tecnicoId = null, tecnicoDb = tecnicoDb)
                     }
                 }
             }
