@@ -33,7 +33,7 @@ import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.launch
 
 @Composable
-fun TicketScreen(ticketDb: TecnicoDb) {
+fun TicketScreen(TikcetId:Int? ,ticketDb: TecnicoDb) {
     var fecha by remember { mutableStateOf("") }
     var prioridad by remember { mutableStateOf(Int.toString()) }
     var cliente by remember { mutableStateOf("") }
