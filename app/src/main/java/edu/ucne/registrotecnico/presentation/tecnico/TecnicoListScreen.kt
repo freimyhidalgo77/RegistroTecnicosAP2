@@ -36,10 +36,7 @@ fun TecnicoListScreen(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Lista de técnicos",
-            style = MaterialTheme.typography.headlineSmall
-        )
+
         Spacer(modifier = Modifier.height(8.dp))
 
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
@@ -56,6 +53,8 @@ fun TecnicoRow(
     onEdit: (TecnicoEntity) -> Unit,
     onDelete: (TecnicoEntity) -> Unit
 ) {
+
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier

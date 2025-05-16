@@ -26,11 +26,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import edu.ucne.registrotecnico.data.local.database.TecnicoDb
 import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
+import kotlinx.serialization.Serializable
 
 import kotlinx.coroutines.launch
 
 @Composable
-fun TecnicoScreen(tecnicoDb: TecnicoDb) {
+fun TecnicoScreen(tecnicoId:Int? ,tecnicoDb: TecnicoDb) {
     var nombre by remember { mutableStateOf("") }
     var sueldo by remember { mutableStateOf(0.0) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
