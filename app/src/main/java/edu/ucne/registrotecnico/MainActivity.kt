@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.room.*
 import edu.ucne.registrotecnico.data.local.database.TecnicoDb
 import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
+import edu.ucne.registrotecnico.presentation.navigation.AppNavigation
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoScreen
 import edu.ucne.registrotecnico.ui.theme.RegistroTecnicoTheme
 import kotlinx.coroutines.flow.Flow
@@ -41,20 +42,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             RegistroTecnicoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
-                    ) {
-                        TecnicoScreen(tecnicoId = null, tecnicoDb = tecnicoDb)
-                    }
-                }
+                AppNavigation(tecnicoDb)
             }
         }
     }
 }
-
 
 
 
