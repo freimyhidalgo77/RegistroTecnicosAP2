@@ -7,9 +7,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import edu.ucne.registrotecnico.data.local.database.TecnicoDb
 import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoListScreen
+import edu.ucne.registrotecnico.presentation.tecnico.TecnicoEditScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoScreen
 import edu.ucne.registrotecnico.presentation.ticket.TicketScreen
 import kotlinx.coroutines.launch
@@ -33,7 +35,9 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
                 tecnicoCreate = {
                     navController.navigate("crear_tecnico")
                 },
-                onEdit = {},
+                onEdit = { tecnico ->
+                    navController.navigate(Screen.TecnicoEdit(tecnico.tecnicoId!!))
+                },
                 onDelete = { tecnico ->
                     coroutineScope.launch {
                         tecnicoDb.tecnicoDao().delete(tecnico)
@@ -49,9 +53,20 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             )
         }
 
+        composable<Screen.TecnicoEdit> {
+            val args = it.toRoute<Screen.TecnicoEdit>()
+            TecnicoEditScreen(
+                tecnicoId = args.tecnicoId,
+                tecnicoDb = tecnicoDb,
+                navController = navController,
+
+            )
+        }
 
         composable("tickets") {
-            TicketScreen(ticketId = null, ticketDb = tecnicoDb)
+            TicketScreen(
+                ticketId = null,
+                ticketDb = tecnicoDb)
         }
     }
 }
