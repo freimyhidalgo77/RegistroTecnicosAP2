@@ -13,6 +13,7 @@ import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoListScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoEditScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoScreen
+import edu.ucne.registrotecnico.presentation.ticket.TicketListScreen
 import edu.ucne.registrotecnico.presentation.ticket.TicketScreen
 import kotlinx.coroutines.launch
 
@@ -46,10 +47,19 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             )
         }
 
+        //Navegar a la pantalla de Tecnico
         composable("crear_tecnico") {
             TecnicoScreen(
                 tecnicoId = null,
                 tecnicoDb = tecnicoDb
+            )
+        }
+
+        //Navegar a la pantalla de Ticket
+        composable("crear_ticket") {
+            TicketScreen(
+                ticketId = null,
+                ticketDb = tecnicoDb
             )
         }
 
@@ -63,10 +73,36 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             )
         }
 
-        composable("tickets") {
-            TicketScreen(
-                ticketId = null,
-                ticketDb = tecnicoDb)
+        composable<Screen.TecnicoDelete> {
+            val args = it.toRoute<Screen.TecnicoDelete>()
+            TecnicoEditScreen(
+                tecnicoId = args.tecnicoId,
+                tecnicoDb = tecnicoDb,
+                navController = navController,
+
+                )
         }
+
+        composable("tickets") {
+            val ticketList = tecnicoDb.ticketDao().getAll().collectAsState(initial = emptyList())
+            val coroutineScope = rememberCoroutineScope()
+
+            TicketListScreen(
+                ticketList = ticketList.value,
+                ticketCreate = {
+                    navController.navigate("crear_ticket")
+                },
+                onEdit = { ticket ->
+                    navController.navigate(Screen.TecnicoEdit(ticket.ticketId!!))
+                },
+                onDelete = { ticket ->
+                    coroutineScope.launch {
+                        tecnicoDb.ticketDao().delete(ticket)
+                    }
+                }
+            )
+        }
+
+
     }
 }
