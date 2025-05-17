@@ -1,6 +1,7 @@
 package edu.ucne.registrotecnico.presentation.tecnico
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import edu.ucne.registrotecnico.data.local.database.TecnicoDb
 import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
+import androidx.compose.runtime.*
+import androidx.compose.ui.res.painterResource
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -58,14 +65,20 @@ fun TecnicoListScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+            ) {
                 items(tecnicoList) { tecnico ->
                     TecnicoRow(tecnico, onEdit, onDelete)
                 }
             }
+
         }
     }
 }
+
 
 @Composable
 fun TecnicoRow(
@@ -73,51 +86,85 @@ fun TecnicoRow(
     onEdit: (TecnicoEntity) -> Unit,
     onDelete: (TecnicoEntity) -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Card(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 6.dp),
+            .padding(horizontal = 8.dp),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(16.dp)
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = tecnico.tecnicoId?.toString() ?: "N/A"
-            )
-            Text(
-                modifier = Modifier.weight(2f),
-                text = tecnico.nombre,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                modifier = Modifier.weight(1f),
-                text = tecnico.sueldo.toString()
-            )
-
-            IconButton(onClick = { onEdit(tecnico) }) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Editar técnico",
-                    tint = Color.Blue
+            Column(
+                modifier = Modifier.weight(5f),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "TécnicoId: ${tecnico.tecnicoId ?: "N/A"}",
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                )
+                Text(
+                    text = "Nombre: ${tecnico.nombre}",
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    )
+                )
+                Text(
+                    text = "Sueldo: ${tecnico.sueldo}",
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    )
                 )
             }
-            IconButton(onClick = { onDelete(tecnico) }) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Eliminar técnico",
-                    tint = Color.Red
+
+            IconButton(
+                onClick = { expanded = !expanded },
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(Icons.Filled.MoreVert, contentDescription = "Más opciones")
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+            ) {
+                DropdownMenuItem(
+                    text = { Text("Editar") },
+                    leadingIcon = { Icon(Icons.Filled.Edit, contentDescription = "Editar") },
+                    onClick = {
+                        expanded = false
+                        onEdit(tecnico)
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Eliminar") },
+                    leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = "Eliminar") },
+                    onClick = {
+                        expanded = false
+                        onDelete(tecnico)
+                    }
                 )
             }
         }
-        HorizontalDivider()
     }
 }
+
+
 
 suspend fun saveTecnico(tecnicoDb: TecnicoDb, tecnico: TecnicoEntity) {
     tecnicoDb.tecnicoDao().save(tecnico)
