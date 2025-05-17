@@ -108,7 +108,7 @@ fun TecnicoRow(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "TécnicoId: ${tecnico.tecnicoId ?: "N/A"}",
+                    text = "Técnico ID: ${tecnico.tecnicoId ?: "N/A"}",
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,

@@ -119,7 +119,7 @@ fun TicketRow(
                     )
                 )
                 Text(
-                    text = "PrioridadId: ${ticket.prioridadId}",
+                    text = "Prioridad ID: ${ticket.prioridadId}",
                     style = TextStyle(
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
