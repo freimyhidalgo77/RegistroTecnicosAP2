@@ -20,4 +20,7 @@ sealed interface Screen {
 
     @Serializable
     data class TecnicoEdit(val tecnicoId: Int) : Screen
+
+    @Serializable
+    data class TecnicoDelete(val tecnicoId: Int) : Screen
 }
