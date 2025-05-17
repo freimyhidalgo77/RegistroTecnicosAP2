@@ -131,20 +131,6 @@ fun TecnicoScreen(tecnicoId:Int? ,tecnicoDb: TecnicoDb) {
                     }
                 }
             }
-
-            TecnicoListScreen(
-                tecnicoList,
-                onEdit = { tecnico ->
-                    nombre = tecnico.nombre
-                    sueldo = tecnico.sueldo
-                    editando = tecnico
-                },
-                onDelete = { tecnico ->
-                    scope.launch {
-                        tecnicoDb.tecnicoDao().delete(tecnico)
-                    }
-                }
-            )
         }
     }
 }
