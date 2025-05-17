@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -17,12 +18,21 @@ fun HomeScreen(navController: NavHostController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
     val scope = rememberCoroutineScope()
 
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text("Agenda de Tecnicos") }
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Agenda de Tecnicos",
+                        color = Color.White
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xFF2196F3)
                 )
-            }
+            )
+        },
+
         ) { padding ->
 
                 Column(
