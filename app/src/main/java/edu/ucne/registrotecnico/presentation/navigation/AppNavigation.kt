@@ -10,6 +10,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import edu.ucne.registrotecnico.data.local.database.TecnicoDb
 import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
+import edu.ucne.registrotecnico.presentation.prioridad.PrioridadListScreen
+import edu.ucne.registrotecnico.presentation.prioridad.PrioridadScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoListScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoEditScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoScreen
@@ -63,6 +65,14 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             )
         }
 
+        //Navegar a la pantalla de Prioridades
+        composable("crear_prioridad") {
+            PrioridadScreen (
+                prioridadId = null,
+                prioridadDb = tecnicoDb
+            )
+        }
+
         composable<Screen.TecnicoEdit> {
             val args = it.toRoute<Screen.TecnicoEdit>()
             TecnicoEditScreen(
@@ -102,6 +112,30 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
                 }
             )
         }
+
+
+
+        composable("prioridades") {
+            val prioridadesList = tecnicoDb.prioridadDao().getAll().collectAsState(initial = emptyList())
+            val coroutineScope = rememberCoroutineScope()
+
+            PrioridadListScreen (
+                prioridadList = prioridadesList.value,
+                prioridadCreate = {
+                    navController.navigate("crear_prioridad")
+                },
+                onEdit = { prioridad ->
+                    navController.navigate(Screen.PrioridadEdit(prioridad.prioridadId!!))
+                },
+                onDelete = { prioridad ->
+                    coroutineScope.launch {
+                        tecnicoDb.prioridadDao().delete(prioridad)
+                    }
+                }
+            )
+        }
+
+
 
 
     }
