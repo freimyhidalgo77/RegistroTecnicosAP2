@@ -17,4 +17,7 @@ sealed interface Screen {
 
     @Serializable
     data class Ticket(val ticketId: Int) : Screen
+
+    @Serializable
+    data class TecnicoEdit(val tecnicoId: Int) : Screen
 }
