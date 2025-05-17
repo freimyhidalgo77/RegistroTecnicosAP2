@@ -71,6 +71,21 @@ fun HomeScreen(navController: NavHostController) {
                             Text("Tickets", fontSize = 18.sp)
                         }
                     }
+
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .clickable { navController.navigate("prioridades") }
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Text("Prioridades", fontSize = 18.sp)
+                        }
+                    }
+
                 }
             }
         }
