@@ -33,8 +33,6 @@ import kotlinx.coroutines.launch
 import androidx.compose.material.icons.filled.ArrowBack
 
 
-
-
 @Composable
 fun TecnicoEditScreen(tecnicoId: Int, tecnicoDb: TecnicoDb, navController: NavController) {
     var nombre by remember { mutableStateOf("") }
