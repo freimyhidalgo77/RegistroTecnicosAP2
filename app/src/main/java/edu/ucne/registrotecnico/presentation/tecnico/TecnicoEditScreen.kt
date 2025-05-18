@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.material.icons.filled.ArrowBack
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TecnicoEditScreen(tecnicoId: Int, tecnicoDb: TecnicoDb, navController: NavController) {
     var nombre by remember { mutableStateOf("") }
@@ -49,7 +50,22 @@ fun TecnicoEditScreen(tecnicoId: Int, tecnicoDb: TecnicoDb, navController: NavCo
         }
     }
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Modificar técnico",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
+            )
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -125,4 +141,3 @@ fun TecnicoEditScreen(tecnicoId: Int, tecnicoDb: TecnicoDb, navController: NavCo
         }
     }
 }
-

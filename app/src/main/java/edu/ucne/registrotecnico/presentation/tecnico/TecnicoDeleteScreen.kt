@@ -34,6 +34,20 @@ fun TecnicoDeleteScreen(
         tecnico.value = tecnicoDb.tecnicoDao().find(tecnicoId)
     }
 
+    if (tecnico.value == null) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Cargando datos de la prioridad...")
+        }
+        return
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +90,7 @@ fun TecnicoDeleteScreen(
 
 
         Text(
-            text = "¿Estas seguro que deseas eliminar al tecnico '${tecnico.value!!.nombre}'?",
+            text = "¿Estas seguro que deseas eliminar al tecnico ${tecnico.value!!.nombre}?",
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )

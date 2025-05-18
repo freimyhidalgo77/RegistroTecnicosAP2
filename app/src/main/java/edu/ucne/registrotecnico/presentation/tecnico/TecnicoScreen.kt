@@ -31,8 +31,15 @@ import kotlinx.serialization.Serializable
 
 import kotlinx.coroutines.launch
 
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TecnicoScreen(tecnicoId:Int? ,tecnicoDb: TecnicoDb) {
+fun TecnicoScreen(tecnicoId: Int?, tecnicoDb: TecnicoDb) {
     var nombre by remember { mutableStateOf("") }
     var sueldo by remember { mutableStateOf(0.0) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -40,14 +47,30 @@ fun TecnicoScreen(tecnicoId:Int? ,tecnicoDb: TecnicoDb) {
     val scope = rememberCoroutineScope()
     val tecnicoList by tecnicoDb.tecnicoDao().getAll().collectAsState(initial = emptyList())
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Registrar Técnico",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        color = Color.White
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xFF2196F3)
+                )
+            )
+        }
+    ) { innerPadding ->
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(innerPadding)
                 .padding(8.dp)
-        )
-        {
+        ) {
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -67,7 +90,6 @@ fun TecnicoScreen(tecnicoId:Int? ,tecnicoDb: TecnicoDb) {
                         label = { Text("Sueldo del técnico") },
                         value = sueldo.toString(),
                         onValueChange = {
-
                             val newValue = it.toDoubleOrNull()
                             if (newValue != null) {
                                 sueldo = newValue
@@ -75,7 +97,6 @@ fun TecnicoScreen(tecnicoId:Int? ,tecnicoDb: TecnicoDb) {
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
-
 
                     Spacer(modifier = Modifier.padding(2.dp))
 
@@ -96,14 +117,12 @@ fun TecnicoScreen(tecnicoId:Int? ,tecnicoDb: TecnicoDb) {
                             Text("Nuevo")
                         }
 
-
                         OutlinedButton(
                             onClick = {
                                 if (nombre.isBlank()) {
                                     errorMessage = "El nombre no puede estar vacío."
                                     return@OutlinedButton
                                 }
-
                                 if (sueldo == 0.0) {
                                     errorMessage = "El sueldo debe tener un valor válido."
                                     return@OutlinedButton

@@ -37,7 +37,8 @@ fun TicketListScreen(
                 title = {
                     Text(
                         text = "Lista de Tickets",
-                        color = Color.White
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
                     )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(

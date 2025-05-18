@@ -39,6 +39,7 @@ fun TecnicoListScreen(
                 title = {
                     Text(
                         text = "Lista de técnicos",
+                        fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
                 },
