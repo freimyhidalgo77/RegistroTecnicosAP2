@@ -55,7 +55,6 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             )
         }
 
-        //Navegar a la pantalla de Tecnico
         composable("crear_tecnico") {
             TecnicoScreen(
                 tecnicoId = null,
@@ -63,8 +62,6 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             )
         }
 
-
-        //Navegar a la pantalla de editar tecnico
         composable<Screen.TecnicoEdit> {
             val args = it.toRoute<Screen.TecnicoEdit>()
             TecnicoEditScreen(
@@ -75,7 +72,6 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             )
         }
 
-        //Navegar a la pantalla de eliminar tecnico
         composable<Screen.TecnicoDelete> {
             val args = it.toRoute<Screen.TecnicoDelete>()
             TecnicoDeleteScreen (
@@ -84,8 +80,6 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
                 navController = navController
             )
         }
-
-
 
         composable("tickets") {
             val ticketList = tecnicoDb.ticketDao().getAll().collectAsState(initial = emptyList())
@@ -107,7 +101,6 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             )
         }
 
-        //Navegar a la pantalla de ticket
         composable("crear_ticket") {
             TicketScreen(
                 ticketId = null,
@@ -115,7 +108,6 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             )
         }
 
-        //Navegar a la pantalla de editar ticket
         composable<Screen.TicketEdit> {
             val args = it.toRoute<Screen.TicketEdit>()
             TicketEditScreen(
@@ -126,7 +118,6 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
                 )
         }
 
-        //Navegar a la pantalla de eliminar ticket
         composable<Screen.TicketDelete> {
             val args = it.toRoute<Screen.TicketDelete>()
             TicketDeleteScreen(
@@ -136,8 +127,6 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
 
                 )
         }
-
-
 
         composable("prioridades") {
             val prioridadesList = tecnicoDb.prioridadDao().getAll().collectAsState(initial = emptyList())
@@ -159,7 +148,6 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             )
         }
 
-        //Navegar a la pantalla de Prioridades
         composable("crear_prioridad") {
             PrioridadScreen (
                 prioridadId = null,
@@ -177,7 +165,6 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
                 )
         }
 
-
         composable<Screen.PrioridadDelete> {
             val args = it.toRoute<Screen.PrioridadDelete>()
             PrioridadDeleteScreen(
@@ -187,6 +174,5 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
 
                 )
         }
-
     }
 }
