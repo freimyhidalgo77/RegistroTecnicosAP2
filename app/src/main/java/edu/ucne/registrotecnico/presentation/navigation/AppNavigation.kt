@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import edu.ucne.registrotecnico.data.local.database.TecnicoDb
 import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
+import edu.ucne.registrotecnico.presentation.prioridad.PrioridadDeleteScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadEditScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadListScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadScreen
@@ -18,6 +19,7 @@ import edu.ucne.registrotecnico.presentation.tecnico.TecnicoDeleteScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoListScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoEditScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoScreen
+import edu.ucne.registrotecnico.presentation.ticket.TicketDeleteScreen
 import edu.ucne.registrotecnico.presentation.ticket.TicketEditScreen
 import edu.ucne.registrotecnico.presentation.ticket.TicketListScreen
 import edu.ucne.registrotecnico.presentation.ticket.TicketScreen
@@ -99,7 +101,7 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
                 },
                 onDelete = { ticket ->
                     coroutineScope.launch {
-                        tecnicoDb.ticketDao().delete(ticket)
+                        navController.navigate(Screen.TicketDelete(ticket.ticketId!!))
                     }
                 }
             )
@@ -124,6 +126,18 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
                 )
         }
 
+        //Navegar a la pantalla de eliminar ticket
+        composable<Screen.TicketDelete> {
+            val args = it.toRoute<Screen.TicketDelete>()
+            TicketDeleteScreen(
+                ticketId = args.ticketId,
+                ticketDb = tecnicoDb,
+                navController = navController,
+
+                )
+        }
+
+
 
         composable("prioridades") {
             val prioridadesList = tecnicoDb.prioridadDao().getAll().collectAsState(initial = emptyList())
@@ -139,7 +153,7 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
                 },
                 onDelete = { prioridad ->
                     coroutineScope.launch {
-                        tecnicoDb.prioridadDao().delete(prioridad)
+                        navController.navigate(Screen.PrioridadDelete(prioridad.prioridadId!!))
                     }
                 }
             )
@@ -164,7 +178,15 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
         }
 
 
+        composable<Screen.PrioridadDelete> {
+            val args = it.toRoute<Screen.PrioridadDelete>()
+            PrioridadDeleteScreen(
+                prioridadId = args.prioridadId,
+                prioridadDb = tecnicoDb,
+                navController = navController,
 
+                )
+        }
 
     }
 }
