@@ -14,6 +14,7 @@ import edu.ucne.registrotecnico.presentation.prioridad.PrioridadEditScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadListScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadScreen
 import edu.ucne.registrotecnico.presentation.prioridad.savePrioridad
+import edu.ucne.registrotecnico.presentation.tecnico.TecnicoDeleteScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoListScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoEditScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoScreen
@@ -46,7 +47,7 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
                 },
                 onDelete = { tecnico ->
                     coroutineScope.launch {
-                        tecnicoDb.tecnicoDao().delete(tecnico)
+                        navController.navigate(Screen.TecnicoDelete(tecnico.tecnicoId!!))
                     }
                 }
             )
@@ -75,13 +76,13 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
         //Navegar a la pantalla de eliminar tecnico
         composable<Screen.TecnicoDelete> {
             val args = it.toRoute<Screen.TecnicoDelete>()
-            TecnicoEditScreen(
+            TecnicoDeleteScreen (
                 tecnicoId = args.tecnicoId,
                 tecnicoDb = tecnicoDb,
-                navController = navController,
-
-                )
+                navController = navController
+            )
         }
+
 
 
         composable("tickets") {
