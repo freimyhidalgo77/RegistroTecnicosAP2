@@ -13,6 +13,7 @@ import edu.ucne.registrotecnico.data.local.database.TecnicoDb
 import edu.ucne.registrotecnico.data.local.entities.TicketEntity
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
     var fecha by remember { mutableStateOf("") }
@@ -26,6 +27,8 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
 
     val scope = rememberCoroutineScope()
     val ticketList by ticketDb.ticketDao().getAll().collectAsState(initial = emptyList())
+    val prioridadList by ticketDb.prioridadDao().getAll().collectAsState(initial = emptyList())
+    val tecnicoList by ticketDb.tecnicoDao().getAll().collectAsState(initial = emptyList())
 
     Scaffold { innerPadding ->
         Column(
@@ -49,12 +52,36 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    OutlinedTextField(
-                        label = { Text("Prioridad ID") },
-                        value = prioridad,
-                        onValueChange = { prioridad = it },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    // Dropdown de Prioridad
+                    var expandedPrioridad by remember { mutableStateOf(false) }
+                    ExposedDropdownMenuBox(
+                        expanded = expandedPrioridad,
+                        onExpandedChange = { expandedPrioridad = !expandedPrioridad }
+                    ) {
+                        TextField(
+                            readOnly = true,
+                            value = prioridad,
+                            onValueChange = {},
+                            label = { Text("Seleccione una Prioridad") },
+                            modifier = Modifier
+                                .menuAnchor()
+                                .fillMaxWidth()
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expandedPrioridad,
+                            onDismissRequest = { expandedPrioridad = false }
+                        ) {
+                            prioridadList.forEach {
+                                DropdownMenuItem(
+                                    text = { Text(it.descripcion) },
+                                    onClick = {
+                                        prioridad = it.prioridadId.toString()
+                                        expandedPrioridad = false
+                                    }
+                                )
+                            }
+                        }
+                    }
 
                     OutlinedTextField(
                         label = { Text("Nombre del cliente") },
@@ -77,12 +104,36 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    OutlinedTextField(
-                        label = { Text("Técnico ID") },
-                        value = tecnico,
-                        onValueChange = { tecnico = it },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    // Dropdown de Tecnico
+                    var expandedTecnico by remember { mutableStateOf(false) }
+                    ExposedDropdownMenuBox(
+                        expanded = expandedTecnico,
+                        onExpandedChange = { expandedTecnico = !expandedTecnico }
+                    ) {
+                        TextField(
+                            readOnly = true,
+                            value = tecnico,
+                            onValueChange = {},
+                            label = { Text("Seleccione un Técnico") },
+                            modifier = Modifier
+                                .menuAnchor()
+                                .fillMaxWidth()
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expandedTecnico,
+                            onDismissRequest = { expandedTecnico = false }
+                        ) {
+                            tecnicoList.forEach {
+                                DropdownMenuItem(
+                                    text = { Text(it.nombre) },
+                                    onClick = {
+                                        tecnico = it.tecnicoId.toString()
+                                        expandedTecnico = false
+                                    }
+                                )
+                            }
+                        }
+                    }
 
                     Spacer(modifier = Modifier.padding(2.dp))
 
@@ -91,8 +142,41 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                     }
 
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        OutlinedButton(
-                            onClick = {
+                        OutlinedButton(onClick = {
+                            fecha = ""
+                            prioridad = ""
+                            cliente = ""
+                            asunto = ""
+                            descripcion = ""
+                            tecnico = ""
+                            errorMessage = null
+                            editando = null
+                        }) {
+                            Icon(Icons.Default.Add, contentDescription = "Nuevo")
+                            Text("Nuevo")
+                        }
+
+                        OutlinedButton(onClick = {
+                            if (fecha.isBlank() || prioridad.isBlank() || cliente.isBlank() ||
+                                asunto.isBlank() || descripcion.isBlank() || tecnico.isBlank()
+                            ) {
+                                errorMessage = "Todos los campos son obligatorios"
+                                return@OutlinedButton
+                            }
+
+                            scope.launch {
+                                saveTicket(
+                                    ticketDb,
+                                    TicketEntity(
+                                        ticketId = editando?.ticketId,
+                                        fecha = fecha,
+                                        prioridadId = prioridad.toIntOrNull(),
+                                        cliente = cliente,
+                                        asunto = asunto,
+                                        descripcion = descripcion,
+                                        tecnicoId = tecnico.toIntOrNull() ?: 0
+                                    )
+                                )
                                 fecha = ""
                                 prioridad = ""
                                 cliente = ""
@@ -102,77 +186,17 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                                 errorMessage = null
                                 editando = null
                             }
-                        ) {
-                            Icon(Icons.Default.Add, contentDescription = "Nuevo")
-                            Text("Nuevo")
-                        }
-
-                        OutlinedButton(
-                            onClick = {
-                                if (fecha.isBlank()) {
-                                    errorMessage = "La fecha no puede estar vacía."
-                                    return@OutlinedButton
-                                }
-
-                                if (prioridad.isBlank()) {
-                                    errorMessage = "Ingrese la prioridad."
-                                    return@OutlinedButton
-                                }
-
-                                if (cliente.isBlank()) {
-                                    errorMessage = "El nombre del cliente no puede estar vacío."
-                                    return@OutlinedButton
-                                }
-
-                                if (asunto.isBlank()) {
-                                    errorMessage = "El asunto no puede estar vacío."
-                                    return@OutlinedButton
-                                }
-
-                                if (descripcion.isBlank()) {
-                                    errorMessage = "La descripción no puede estar vacía."
-                                    return@OutlinedButton
-                                }
-
-                                if (tecnico.isBlank()) {
-                                    errorMessage = "El técnico no puede estar vacío."
-                                    return@OutlinedButton
-                                }
-
-                                scope.launch {
-                                    saveTicket(
-                                        ticketDb,
-                                        TicketEntity(
-                                            ticketId = editando?.ticketId,
-                                            fecha = fecha,
-                                            prioridadId = prioridad.toIntOrNull(),
-                                            cliente = cliente,
-                                            asunto = asunto,
-                                            descripcion = descripcion,
-                                            tecnicoId = tecnico.toIntOrNull() ?: 0
-                                        )
-                                    )
-                                    fecha = ""
-                                    prioridad = ""
-                                    cliente = ""
-                                    asunto = ""
-                                    descripcion = ""
-                                    tecnico = ""
-                                    errorMessage = null
-                                    editando = null
-                                }
-                            }
-                        ) {
+                        }) {
                             Icon(Icons.Default.Edit, contentDescription = "Guardar")
                             Text("Guardar")
                         }
                     }
                 }
             }
-
         }
     }
 }
+
 
 
 

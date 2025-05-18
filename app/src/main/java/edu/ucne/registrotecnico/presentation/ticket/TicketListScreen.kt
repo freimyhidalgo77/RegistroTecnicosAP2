@@ -104,7 +104,7 @@ fun TicketRow(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "TicketId: ${ticket.ticketId ?: "N/A"}",
+                    text = "Ticket ID: ${ticket.ticketId ?: "N/A"}",
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -147,7 +147,7 @@ fun TicketRow(
                     )
                 )
                 Text(
-                    text = "TécnicoId: ${ticket.tecnicoId}",
+                    text = "Técnico Id: ${ticket.tecnicoId}",
                     style = TextStyle(
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
