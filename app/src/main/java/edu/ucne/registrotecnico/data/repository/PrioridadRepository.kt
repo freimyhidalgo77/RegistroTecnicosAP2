@@ -1,9 +1,7 @@
 package edu.ucne.registrotecnico.data.repository
 
 import edu.ucne.registrotecnico.data.local.dao.PrioridadDao
-import edu.ucne.registrotecnico.data.local.dao.TecnicoDao
 import edu.ucne.registrotecnico.data.local.entities.PrioridadEntity
-import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
 import kotlinx.coroutines.flow.Flow
 
 class PrioridadRepository(
