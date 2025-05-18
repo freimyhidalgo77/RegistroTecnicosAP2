@@ -33,7 +33,12 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
     var editando by remember { mutableStateOf<TicketEntity?>(null) }
 
     val scope = rememberCoroutineScope()
-    val ticketList by ticketDb.ticketDao().getAll().collectAsState(initial = emptyList())
+
+    val prioridadList by ticketDb.prioridadDao().getAll().collectAsState(initial = emptyList())
+    val tecnicoList by ticketDb.tecnicoDao().getAll().collectAsState(initial = emptyList())
+
+    var expandedPrioridad by remember { mutableStateOf(false) }
+    var expandedTecnico by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -47,7 +52,7 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                     )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFF2196F3) // Azul igual que en Técnico
+                    containerColor = Color(0xFF2196F3)
                 )
             )
         }
@@ -73,12 +78,35 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    OutlinedTextField(
-                        label = { Text("Prioridad ID") },
-                        value = prioridad,
-                        onValueChange = { prioridad = it },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    // PRIORIDAD Dropdown
+                    ExposedDropdownMenuBox(
+                        expanded = expandedPrioridad,
+                        onExpandedChange = { expandedPrioridad = !expandedPrioridad }
+                    ) {
+                        TextField(
+                            readOnly = true,
+                            value = prioridadList.find { it.prioridadId.toString() == prioridad }?.descripcion ?: "",
+                            onValueChange = {},
+                            label = { Text("Seleccione una Prioridad") },
+                            modifier = Modifier
+                                .menuAnchor()
+                                .fillMaxWidth()
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expandedPrioridad,
+                            onDismissRequest = { expandedPrioridad = false }
+                        ) {
+                            prioridadList.forEach {
+                                DropdownMenuItem(
+                                    text = { Text(it.descripcion) },
+                                    onClick = {
+                                        prioridad = it.prioridadId.toString()
+                                        expandedPrioridad = false
+                                    }
+                                )
+                            }
+                        }
+                    }
 
                     OutlinedTextField(
                         label = { Text("Nombre del cliente") },
@@ -95,18 +123,41 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                     )
 
                     OutlinedTextField(
-                        label = { Text("Descripción") },
+                        label = { Text("Descripcion") },
                         value = descripcion,
                         onValueChange = { descripcion = it },
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    OutlinedTextField(
-                        label = { Text("Técnico ID") },
-                        value = tecnico,
-                        onValueChange = { tecnico = it },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    // TECNICO Dropdown
+                    ExposedDropdownMenuBox(
+                        expanded = expandedTecnico,
+                        onExpandedChange = { expandedTecnico = !expandedTecnico }
+                    ) {
+                        TextField(
+                            readOnly = true,
+                            value = tecnicoList.find { it.tecnicoId.toString() == tecnico }?.nombre ?: "",
+                            onValueChange = {},
+                            label = { Text("Seleccione un Tecnico") },
+                            modifier = Modifier
+                                .menuAnchor()
+                                .fillMaxWidth()
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expandedTecnico,
+                            onDismissRequest = { expandedTecnico = false }
+                        ) {
+                            tecnicoList.forEach {
+                                DropdownMenuItem(
+                                    text = { Text(it.nombre) },
+                                    onClick = {
+                                        tecnico = it.tecnicoId.toString()
+                                        expandedTecnico = false
+                                    }
+                                )
+                            }
+                        }
+                    }
 
                     Spacer(modifier = Modifier.padding(2.dp))
 
@@ -196,4 +247,3 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
         }
     }
 }
-

@@ -55,7 +55,7 @@ fun TecnicoEditScreen(tecnicoId: Int, tecnicoDb: TecnicoDb, navController: NavCo
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Modificar técnico",
+                        text = "Modificar tecnico",
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
@@ -73,7 +73,7 @@ fun TecnicoEditScreen(tecnicoId: Int, tecnicoDb: TecnicoDb, navController: NavCo
                 .padding(8.dp)
         ) {
             OutlinedTextField(
-                label = { Text("Nombre del técnico") },
+                label = { Text("Nombre del tecnico") },
                 value = nombre,
                 onValueChange = { nombre = it },
                 modifier = Modifier.fillMaxWidth()
@@ -106,11 +106,11 @@ fun TecnicoEditScreen(tecnicoId: Int, tecnicoDb: TecnicoDb, navController: NavCo
                 OutlinedButton(
                     onClick = {
                         if (nombre.isBlank()) {
-                            errorMessage = "El nombre no puede estar vacío"
+                            errorMessage = "El nombre no puede estar vacio"
                             return@OutlinedButton
                         }
                         if (sueldo <= 0.0) {
-                            errorMessage = "Sueldo inválido"
+                            errorMessage = "Sueldo invalido"
                             return@OutlinedButton
                         }
 

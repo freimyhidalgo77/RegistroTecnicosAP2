@@ -38,7 +38,7 @@ fun TecnicoListScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Lista de técnicos",
+                        text = "Lista de tecnicos",
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
@@ -55,7 +55,7 @@ fun TecnicoListScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = Color.White
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "Añadir Técnico")
+                Icon(Icons.Filled.Add, contentDescription = "Añadir Tecnico")
             }
         }
     ) { paddingValues ->
@@ -109,7 +109,7 @@ fun TecnicoRow(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Técnico ID: ${tecnico.tecnicoId ?: "N/A"}",
+                    text = "Tecnico ID: ${tecnico.tecnicoId ?: "N/A"}",
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -136,7 +136,7 @@ fun TecnicoRow(
                 onClick = { expanded = !expanded },
                 modifier = Modifier.weight(1f)
             ) {
-                Icon(Icons.Filled.MoreVert, contentDescription = "Más opciones")
+                Icon(Icons.Filled.MoreVert, contentDescription = "Mas opciones")
             }
 
             DropdownMenu(
@@ -164,7 +164,6 @@ fun TecnicoRow(
         }
     }
 }
-
 
 
 suspend fun saveTecnico(tecnicoDb: TecnicoDb, tecnico: TecnicoEntity) {

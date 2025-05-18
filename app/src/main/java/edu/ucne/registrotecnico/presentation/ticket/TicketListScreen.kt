@@ -148,7 +148,7 @@ fun TicketRow(
                     )
                 )
                 Text(
-                    text = "Técnico Id: ${ticket.tecnicoId}",
+                    text = "Tecnico Id: ${ticket.tecnicoId}",
                     style = TextStyle(
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
@@ -160,7 +160,7 @@ fun TicketRow(
                 onClick = { expanded = !expanded },
                 modifier = Modifier.weight(1f)
             ) {
-                Icon(Icons.Filled.MoreVert, contentDescription = "Más opciones")
+                Icon(Icons.Filled.MoreVert, contentDescription = "Mas opciones")
             }
 
             DropdownMenu(

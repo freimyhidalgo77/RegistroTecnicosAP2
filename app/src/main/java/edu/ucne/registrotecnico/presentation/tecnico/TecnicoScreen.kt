@@ -52,7 +52,7 @@ fun TecnicoScreen(tecnicoId: Int?, tecnicoDb: TecnicoDb) {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Registrar Técnico",
+                        text = "Registrar Tecnico",
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                         color = Color.White
@@ -80,14 +80,14 @@ fun TecnicoScreen(tecnicoId: Int?, tecnicoDb: TecnicoDb) {
                         .padding(8.dp)
                 ) {
                     OutlinedTextField(
-                        label = { Text("Nombre del técnico") },
+                        label = { Text("Nombre del tecnico") },
                         value = nombre,
                         onValueChange = { nombre = it },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
-                        label = { Text("Sueldo del técnico") },
+                        label = { Text("Sueldo del tecnico") },
                         value = sueldo.toString(),
                         onValueChange = {
                             val newValue = it.toDoubleOrNull()
@@ -120,11 +120,11 @@ fun TecnicoScreen(tecnicoId: Int?, tecnicoDb: TecnicoDb) {
                         OutlinedButton(
                             onClick = {
                                 if (nombre.isBlank()) {
-                                    errorMessage = "El nombre no puede estar vacío."
+                                    errorMessage = "El nombre no puede estar vacio."
                                     return@OutlinedButton
                                 }
                                 if (sueldo == 0.0) {
-                                    errorMessage = "El sueldo debe tener un valor válido."
+                                    errorMessage = "El sueldo debe tener un valor valido."
                                     return@OutlinedButton
                                 }
 
