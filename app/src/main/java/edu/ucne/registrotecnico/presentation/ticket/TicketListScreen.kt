@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import edu.ucne.registrotecnico.data.local.database.TecnicoDb
+import edu.ucne.registrotecnico.data.local.entities.MensajeEntity
 import edu.ucne.registrotecnico.data.local.entities.TicketEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,7 +31,9 @@ fun TicketListScreen(
     ticketList: List<TicketEntity>,
     ticketCreate: () -> Unit,
     onEdit: (TicketEntity) -> Unit,
-    onDelete: (TicketEntity) -> Unit
+    onDelete: (TicketEntity) -> Unit,
+    onVerMensajes: (TicketEntity) -> Unit
+
 ) {
     Scaffold(
         topBar = {
@@ -70,7 +74,7 @@ fun TicketListScreen(
                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
             ) {
                 items(ticketList) { ticket ->
-                    TicketRow(ticket, onEdit, onDelete)
+                    TicketRow(ticket, onEdit, onDelete, onVerMensajes)
                 }
             }
         }
@@ -81,7 +85,8 @@ fun TicketListScreen(
 fun TicketRow(
     ticket: TicketEntity,
     onEdit: (TicketEntity) -> Unit,
-    onDelete: (TicketEntity) -> Unit
+    onDelete: (TicketEntity) -> Unit,
+    onVerMensajes: (TicketEntity) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -104,90 +109,55 @@ fun TicketRow(
                 modifier = Modifier.weight(5f),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "Ticket ID: ${ticket.ticketId ?: "N/A"}",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                )
-                Text(
-                    text = "Fecha: ${ticket.fecha}",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
-                )
-                Text(
-                    text = "Prioridad ID: ${ticket.prioridadId}",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
-                )
-                Text(
-                    text = "Cliente: ${ticket.cliente}",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
-                )
-                Text(
-                    text = "Asunto: ${ticket.asunto}",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
-                )
-                Text(
-                    text = "Descripción: ${ticket.descripcion}",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
-                )
-                Text(
-                    text = "Tecnico Id: ${ticket.tecnicoId}",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
-                )
+                Text("Ticket ID: ${ticket.ticketId ?: "N/A"}", style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold))
+                Text("Fecha: ${ticket.fecha}", fontSize = 14.sp)
+                Text("Prioridad ID: ${ticket.prioridadId}", fontSize = 14.sp)
+                Text("Cliente: ${ticket.cliente}", fontSize = 14.sp)
+                Text("Asunto: ${ticket.asunto}", fontSize = 14.sp)
+                Text("Descripción: ${ticket.descripcion}", fontSize = 14.sp)
+                Text("Técnico ID: ${ticket.tecnicoId}", fontSize = 14.sp)
             }
 
-            IconButton(
-                onClick = { expanded = !expanded },
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.MoreVert, contentDescription = "Mas opciones")
-            }
+            Box(modifier = Modifier.weight(1f)) {
+                IconButton(onClick = { expanded = true }) {
+                    Icon(Icons.Filled.MoreVert, contentDescription = "Más opciones")
+                }
 
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier.background(MaterialTheme.colorScheme.surface)
-            ) {
-                DropdownMenuItem(
-                    text = { Text("Editar") },
-                    leadingIcon = { Icon(Icons.Filled.Edit, contentDescription = "Editar") },
-                    onClick = {
-                        expanded = false
-                        onEdit(ticket)
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Eliminar") },
-                    leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = "Eliminar") },
-                    onClick = {
-                        expanded = false
-                        onDelete(ticket)
-                    }
-                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Mensajes") },
+                        leadingIcon = { Icon(Icons.Filled.MailOutline, contentDescription = null) },
+                        onClick = {
+                            expanded = false
+                            onVerMensajes(ticket)
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Editar") },
+                        leadingIcon = { Icon(Icons.Filled.Edit, contentDescription = null) },
+                        onClick = {
+                            expanded = false
+                            onEdit(ticket)
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Eliminar") },
+                        leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = null) },
+                        onClick = {
+                            expanded = false
+                            onDelete(ticket)
+                        }
+                    )
+                }
             }
         }
     }
 }
+
 
 suspend fun saveTicket(ticketDb: TecnicoDb, ticket: TicketEntity) {
     ticketDb.ticketDao().save(ticket)
