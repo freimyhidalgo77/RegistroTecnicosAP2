@@ -48,5 +48,16 @@ sealed interface Screen {
 
 
 
+    @Serializable
+    data class Mensaje(val mensajeId: Int) : Screen
+
+    @Serializable
+    object MensajeList : Screen
+
+    @Serializable
+    data class sendMessage(val mensajeId: Int) : Screen
+
+
+
 
 }
