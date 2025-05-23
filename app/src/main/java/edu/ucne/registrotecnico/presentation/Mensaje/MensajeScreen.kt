@@ -44,7 +44,7 @@ import java.sql.Date as SqlDate
 fun MensajeScreen(viewModel: MensajeViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     var tecnicoId by remember { mutableStateOf("") }
-    var selectRole by remember { mutableStateOf("Operador") } // Cambiado a español para consistencia
+    var selectRole by remember { mutableStateOf("Operador") }
 
     Card(
         modifier = Modifier
@@ -60,7 +60,7 @@ fun MensajeScreen(viewModel: MensajeViewModel = hiltViewModel()) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Reply",
+                text = "Enviar mensaje",
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
@@ -119,13 +119,12 @@ fun MensajeScreen(viewModel: MensajeViewModel = hiltViewModel()) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Botón para guardar
             Button(
                 onClick = {
                     val mensaje = MensajeEntity(
                         mensajeId = 0,
                         tecnicoId = tecnicoId.toIntOrNull() ?: 0,
-                        descripcion = "${selectRole}: ${uiState.descripcion}", // ⬅ Aquí se puede guardar el rol en la descripción
+                        descripcion = "${selectRole}: ${uiState.descripcion}",
                         fecha = SqlDate(UtilDate().time)
                     )
                     viewModel.save(mensaje)
