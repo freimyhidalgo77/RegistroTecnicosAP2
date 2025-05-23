@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import edu.ucne.registrotecnico.data.local.entities.MensajeEntity
 import java.text.SimpleDateFormat
@@ -147,6 +148,7 @@ fun MensajeCard(mensaje: MensajeEntity) {
                     style = MaterialTheme.typography.bodySmall
                 )
             }
+            Spacer(modifier = Modifier.height(8.dp))
 
             Box(
                 modifier = Modifier
@@ -155,7 +157,7 @@ fun MensajeCard(mensaje: MensajeEntity) {
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Text(
-                    text = "Técnico ID: ${mensaje.tecnicoId}",
+                    text = "Tecnico ID: ${mensaje.tecnicoId}",
                     color = Color.White,
                     style = MaterialTheme.typography.bodySmall
                 )
