@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,70 +43,100 @@ import java.sql.Date as SqlDate
 @Composable
 fun MensajeScreen(viewModel: MensajeViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
-    var tecnicoId by remember { mutableStateOf<String>("") }
+    var tecnicoId by remember { mutableStateOf("") }
+    var selectRole by remember { mutableStateOf("Operador") } // Cambiado a español para consistencia
 
-    Column(
+    Card(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
+        elevation = CardDefaults.cardElevation(8.dp)
     ) {
-
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = tecnicoId,
-            onValueChange = {
-                tecnicoId = it
-
-            },
-            label = { Text("Técnico ID") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = uiState.descripcion,
-            onValueChange = { viewModel.onDescripcionChange(it) },
-            label = { Text("Descripción del Mensaje") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = uiState.fecha?.let {
-                "Fecha: ${SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date(it.time))}"
-            } ?: "Fecha: No disponible"
-        )
-
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                val mensaje = MensajeEntity(
-                    mensajeId = 0,
-                    tecnicoId = tecnicoId.toIntOrNull() ?: 0,
-                    descripcion = uiState.descripcion,
-                    fecha = SqlDate(UtilDate().time)
-                )
-                viewModel.save(mensaje)
-            },
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Guardar Mensaje")
-        }
+            Text(
+                text = "Reply",
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
 
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    androidx.compose.material3.RadioButton(
+                        selected = selectRole == "Operador",
+                        onClick = { selectRole = "Operador" }
+                    )
+                    Text("Operador")
+                }
 
-        Spacer(modifier = Modifier.height(16.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    androidx.compose.material3.RadioButton(
+                        selected = selectRole == "Owner",
+                        onClick = { selectRole = "Owner" }
+                    )
+                    Text("Owner")
+                }
+            }
 
+            OutlinedTextField(
+                value = tecnicoId,
+                onValueChange = { tecnicoId = it },
+                label = { Text("Nombre") },
+                modifier = Modifier.fillMaxWidth()
+            )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = uiState.descripcion,
+                onValueChange = { viewModel.onDescripcionChange(it) },
+                label = { Text("Mensaje") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp),
+                singleLine = false,
+                maxLines = 5
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = uiState.fecha?.let {
+                    "Fecha: ${SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date(it.time))}"
+                } ?: "Fecha: No disponible"
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Botón para guardar
+            Button(
+                onClick = {
+                    val mensaje = MensajeEntity(
+                        mensajeId = 0,
+                        tecnicoId = tecnicoId.toIntOrNull() ?: 0,
+                        descripcion = "${selectRole}: ${uiState.descripcion}", // ⬅ Aquí se puede guardar el rol en la descripción
+                        fecha = SqlDate(UtilDate().time)
+                    )
+                    viewModel.save(mensaje)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Guardar Mensaje")
+            }
         }
     }
+}
 
 
 @Composable
