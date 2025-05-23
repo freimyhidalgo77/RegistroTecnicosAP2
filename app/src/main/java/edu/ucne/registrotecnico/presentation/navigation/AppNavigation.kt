@@ -9,15 +9,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import edu.ucne.registrotecnico.data.local.database.TecnicoDb
-import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
+import edu.ucne.registrotecnico.data.local.entities.MensajeEntity
+import edu.ucne.registrotecnico.data.local.entities.TicketEntity
+import edu.ucne.registrotecnico.presentation.Mensaje.MensajeScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadDeleteScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadEditScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadListScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadScreen
-import edu.ucne.registrotecnico.presentation.prioridad.savePrioridad
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoDeleteScreen
-import edu.ucne.registrotecnico.presentation.tecnico.TecnicoListScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoEditScreen
+import edu.ucne.registrotecnico.presentation.tecnico.TecnicoListScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoScreen
 import edu.ucne.registrotecnico.presentation.ticket.TicketDeleteScreen
 import edu.ucne.registrotecnico.presentation.ticket.TicketEditScreen
@@ -67,14 +68,13 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             TecnicoEditScreen(
                 tecnicoId = args.tecnicoId,
                 tecnicoDb = tecnicoDb,
-                navController = navController,
-
+                navController = navController
             )
         }
 
         composable<Screen.TecnicoDelete> {
             val args = it.toRoute<Screen.TecnicoDelete>()
-            TecnicoDeleteScreen (
+            TecnicoDeleteScreen(
                 tecnicoId = args.tecnicoId,
                 tecnicoDb = tecnicoDb,
                 navController = navController
@@ -90,6 +90,9 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
                 ticketCreate = {
                     navController.navigate("crear_ticket")
                 },
+                onVerMensajes = { mensaje ->
+                    navController.navigate("mensaje")
+                },
                 onEdit = { ticket ->
                     navController.navigate(Screen.TicketEdit(ticket.ticketId!!))
                 },
@@ -101,6 +104,10 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             )
         }
 
+        composable("mensaje") {
+            MensajeScreen(
+            )
+        }
         composable("crear_ticket") {
             TicketScreen(
                 ticketId = null,
@@ -108,14 +115,17 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             )
         }
 
+
+
+
+
         composable<Screen.TicketEdit> {
             val args = it.toRoute<Screen.TicketEdit>()
             TicketEditScreen(
                 ticketId = args.ticketId,
                 ticketDb = tecnicoDb,
-                navController = navController,
-
-                )
+                navController = navController
+            )
         }
 
         composable<Screen.TicketDelete> {
@@ -123,16 +133,16 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             TicketDeleteScreen(
                 ticketId = args.ticketId,
                 ticketDb = tecnicoDb,
-                navController = navController,
-
-                )
+                navController = navController
+            )
         }
+
 
         composable("prioridades") {
             val prioridadesList = tecnicoDb.prioridadDao().getAll().collectAsState(initial = emptyList())
             val coroutineScope = rememberCoroutineScope()
 
-            PrioridadListScreen (
+            PrioridadListScreen(
                 prioridadList = prioridadesList.value,
                 prioridadCreate = {
                     navController.navigate("crear_prioridad")
@@ -149,7 +159,7 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
         }
 
         composable("crear_prioridad") {
-            PrioridadScreen (
+            PrioridadScreen(
                 prioridadId = null,
                 prioridadDb = tecnicoDb
             )
@@ -160,9 +170,8 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             PrioridadEditScreen(
                 prioridadId = args.prioridadId,
                 prioridadDb = tecnicoDb,
-                navController = navController,
-
-                )
+                navController = navController
+            )
         }
 
         composable<Screen.PrioridadDelete> {
@@ -170,9 +179,8 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
             PrioridadDeleteScreen(
                 prioridadId = args.prioridadId,
                 prioridadDb = tecnicoDb,
-                navController = navController,
-
-                )
+                navController = navController
+            )
         }
     }
 }
