@@ -108,7 +108,6 @@ fun MensajeScreen(viewModel: MensajeViewModel = hiltViewModel()) {
     }
 
 
-
 @Composable
 fun MensajeCard(mensaje: MensajeEntity, tecnicos: List<MensajeEntity>) {
     val tecnico = tecnicos.find { it.tecnicoId == mensaje.tecnicoId }
