@@ -26,8 +26,6 @@ object AppModule {
         ).fallbackToDestructiveMigration().build()
     }
 
-
-
     @Provides
     @Singleton
     fun provideTecnicoDao(appDataDb: TecnicoDb) = appDataDb.tecnicoDao()
