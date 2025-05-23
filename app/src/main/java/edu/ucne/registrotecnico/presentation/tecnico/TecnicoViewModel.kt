@@ -1,6 +1,5 @@
 package edu.ucne.registrotecnico.presentation.tecnico
 
-import androidx.benchmark.perfetto.UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
