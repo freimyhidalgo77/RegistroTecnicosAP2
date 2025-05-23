@@ -3,9 +3,10 @@ package edu.ucne.registrotecnico.data.repository
 import edu.ucne.registrotecnico.data.local.dao.TicketDao
 import edu.ucne.registrotecnico.data.local.entities.TicketEntity
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 
-class TicketRepository(
+class TicketRepository  @Inject constructor(
 
     private val dao: TicketDao
 ) {
