@@ -131,7 +131,7 @@ fun MensajeScreen(viewModel: MensajeViewModel = hiltViewModel()) {
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Guardar Mensaje")
+                Text("Guardar")
             }
         }
     }
