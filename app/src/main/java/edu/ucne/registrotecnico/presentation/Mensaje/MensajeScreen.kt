@@ -3,6 +3,8 @@ package edu.ucne.registrotecnico.presentation.Mensaje
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,6 +20,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import java.util.*
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,30 +50,30 @@ fun MensajeScreen(viewModel: MensajeViewModel = hiltViewModel()) {
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = selectRole == "Operador",
-                        onClick = { selectRole = "Operador" }
+                        selected = uiState.rol == "Operador",
+                        onClick = { viewModel.onRolChange("Operador") }
                     )
                     Text("Operador")
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = selectRole == "Owner",
-                        onClick = { selectRole = "Owner" }
+                        selected = uiState.rol == "Owner",
+                        onClick = { viewModel.onRolChange("Owner") }
                     )
                     Text("Owner")
                 }
             }
+
 
             OutlinedTextField(
                 value = uiState.remitente,
@@ -131,7 +135,7 @@ fun MensajeScreen(viewModel: MensajeViewModel = hiltViewModel()) {
                 items(mensajes) { mensaje ->
                     MensajeCard(
                         mensaje = mensaje,
-                        onDelete = { viewModel.deleteMensaje(it) } // Corrección aquí
+                        onDelete = { viewModel.deleteMensaje(it) }
                     )
                 }
             }
@@ -152,14 +156,31 @@ fun MensajeCard(mensaje: MensajeEntity, onDelete: (MensajeEntity) -> Unit) {
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            Text(
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Remitente: ")
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("Remitente: ")
+                        }
+                        append(mensaje.remitente)
                     }
-                    append(mensaje.remitente)
-                }
-            )
+                )
+
+                Text(
+                    text = mensaje.rol,
+                    fontWeight = FontWeight.Bold,
+                    color = when (mensaje.rol) {
+                        "Owner" -> Color.Green
+                        "Operador" -> Color.Blue
+                        else -> Color.Black
+                    }
+                )
+
+            }
 
             Text(
                 text = buildAnnotatedString {
@@ -175,20 +196,32 @@ fun MensajeCard(mensaje: MensajeEntity, onDelete: (MensajeEntity) -> Unit) {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                         append("Fecha: ")
                     }
-                    append(SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(mensaje.fecha))
+                    append(
+                        SimpleDateFormat(
+                            "dd/MM/yyyy HH:mm",
+                            Locale.getDefault()
+                        ).format(mensaje.fecha)
+                    )
                 }
             )
 
-
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(
+            IconButton(
                 onClick = { onDelete(mensaje) },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .size(36.dp)
             ) {
-                Text("Eliminar", color = Color.White)
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Eliminar",
+                    tint = Color.Red
+                )
             }
         }
     }
 }
+
+
+
