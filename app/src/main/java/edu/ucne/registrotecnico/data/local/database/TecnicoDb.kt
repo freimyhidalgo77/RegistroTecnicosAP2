@@ -20,7 +20,7 @@ import edu.ucne.registrotecnico.data.local.entities.TicketEntity
         MensajeEntity::class,
 
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 
