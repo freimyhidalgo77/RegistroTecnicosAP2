@@ -114,8 +114,8 @@ fun TicketRow(
                 Text("Prioridad ID: ${ticket.prioridadId}", fontSize = 14.sp)
                 Text("Cliente: ${ticket.cliente}", fontSize = 14.sp)
                 Text("Asunto: ${ticket.asunto}", fontSize = 14.sp)
-                Text("Descripción: ${ticket.descripcion}", fontSize = 14.sp)
-                Text("Técnico ID: ${ticket.tecnicoId}", fontSize = 14.sp)
+                Text("Descripcion: ${ticket.descripcion}", fontSize = 14.sp)
+                Text("Tecnico ID: ${ticket.tecnicoId}", fontSize = 14.sp)
             }
 
             Box(modifier = Modifier.weight(1f)) {

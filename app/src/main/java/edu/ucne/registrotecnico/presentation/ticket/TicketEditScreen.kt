@@ -209,7 +209,7 @@ fun TicketEditScreen(ticketId: Int, ticketDb: TecnicoDb, navController: NavContr
                     ) {
                         OutlinedButton(
                             onClick = {
-                                // Validaciones
+
                                 if (fecha.isBlank() || cliente.isBlank() || asunto.isBlank()) {
                                     errorMessage = "Todos los campos deben estar completos"
                                     return@OutlinedButton

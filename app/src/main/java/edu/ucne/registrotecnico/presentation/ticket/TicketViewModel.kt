@@ -43,7 +43,4 @@ class TicketViewModel @Inject constructor(
             }
         }
     }
-
-
-
 }

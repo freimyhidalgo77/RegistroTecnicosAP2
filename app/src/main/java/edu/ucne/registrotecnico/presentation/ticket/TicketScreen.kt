@@ -24,14 +24,14 @@ import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.*
 
-// Reemplaza el bloque de imports si es necesario:
+
 import android.app.DatePickerDialog
 import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.platform.LocalContext
 import java.util.Calendar
 
-// En la función Composable...
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
@@ -56,7 +56,7 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
     val dateFormatter = remember { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) }
     val fechaTexto = fecha?.let { dateFormatter.format(it) } ?: ""
 
-    // Para mostrar el DatePicker
+
     val calendar = Calendar.getInstance()
     val datePickerDialog = remember {
         DatePickerDialog(
@@ -100,7 +100,7 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                         .fillMaxWidth()
                         .padding(8.dp)
                 ) {
-                    // Campo de fecha con selector
+
                     OutlinedTextField(
                         label = { Text("Fecha") },
                         value = fechaTexto,
@@ -113,7 +113,7 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                             }
                     )
 
-                    // Prioridad
+
                     ExposedDropdownMenuBox(
                         expanded = expandedPrioridad,
                         onExpandedChange = { expandedPrioridad = !expandedPrioridad }
