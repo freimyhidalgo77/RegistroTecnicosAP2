@@ -116,9 +116,6 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
         }
 
 
-
-
-
         composable<Screen.TicketEdit> {
             val args = it.toRoute<Screen.TicketEdit>()
             TicketEditScreen(
