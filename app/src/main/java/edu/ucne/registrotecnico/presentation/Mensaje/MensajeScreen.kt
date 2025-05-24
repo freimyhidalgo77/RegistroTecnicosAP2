@@ -170,7 +170,15 @@ fun MensajeCard(mensaje: MensajeEntity, onDelete: (MensajeEntity) -> Unit) {
                 }
             )
 
-            Text("Fecha: ${SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(mensaje.fecha)}")
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Fecha: ")
+                    }
+                    append(SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(mensaje.fecha))
+                }
+            )
+
 
             Spacer(modifier = Modifier.height(8.dp))
 
