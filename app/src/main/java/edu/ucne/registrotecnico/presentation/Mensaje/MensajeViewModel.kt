@@ -52,17 +52,19 @@ class MensajeViewModel @Inject constructor(
     }
 
     fun save() {
-        val mensaje = MensajeEntity(
-            remitente = _uiState.value.remitente,
-            descripcion = _uiState.value.descripcion,
-            fecha = _uiState.value.fecha ?: Date(),
-            rol = _uiState.value.rol
-        )
         viewModelScope.launch {
+            val mensaje = MensajeEntity(
+                remitente = uiState.value.remitente,
+                descripcion = uiState.value.descripcion,
+                fecha = uiState.value.fecha ?: Date(),
+                rol = uiState.value.rol
+            )
             mensajeRepository.save(mensaje)
+
             _uiState.value = MensajeUiState()
         }
     }
+
 
     fun deleteMensaje(mensaje: MensajeEntity) {
         viewModelScope.launch {
