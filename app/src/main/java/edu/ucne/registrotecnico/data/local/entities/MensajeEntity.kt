@@ -12,6 +12,8 @@ data class MensajeEntity(
     val tecnicoId: Int? = null,
     val remitente:String = "",
     val descripcion: String = "",
-    val fecha: Date?
+    val fecha: Date?,
+    val rol: String
+
 
 )
