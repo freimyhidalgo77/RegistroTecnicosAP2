@@ -19,11 +19,23 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import java.util.Date
 
+import java.text.SimpleDateFormat
+import java.util.*
+
+// Reemplaza el bloque de imports si es necesario:
+import android.app.DatePickerDialog
+import android.widget.DatePicker
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.platform.LocalContext
+import java.util.Calendar
+
+// En la función Composable...
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
-    var fecha by remember { mutableStateOf("") }
+    var fecha by remember { mutableStateOf(Date()) }
     var prioridad by remember { mutableStateOf("") }
     var cliente by remember { mutableStateOf("") }
     var asunto by remember { mutableStateOf("") }
@@ -33,12 +45,31 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
     var editando by remember { mutableStateOf<TicketEntity?>(null) }
 
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val prioridadList by ticketDb.prioridadDao().getAll().collectAsState(initial = emptyList())
     val tecnicoList by ticketDb.tecnicoDao().getAll().collectAsState(initial = emptyList())
 
     var expandedPrioridad by remember { mutableStateOf(false) }
     var expandedTecnico by remember { mutableStateOf(false) }
+
+    val dateFormatter = remember { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) }
+    val fechaTexto = fecha?.let { dateFormatter.format(it) } ?: ""
+
+    // Para mostrar el DatePicker
+    val calendar = Calendar.getInstance()
+    val datePickerDialog = remember {
+        DatePickerDialog(
+            context,
+            { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+                calendar.set(year, month, dayOfMonth)
+                fecha = calendar.time
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -63,29 +94,34 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                 .padding(innerPadding)
                 .padding(8.dp)
         ) {
-            ElevatedCard(
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
                 ) {
+                    // Campo de fecha con selector
                     OutlinedTextField(
                         label = { Text("Fecha") },
-                        value = fecha,
-                        onValueChange = { fecha = it },
-                        modifier = Modifier.fillMaxWidth()
+                        value = fechaTexto,
+                        onValueChange = {},
+                        readOnly = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                datePickerDialog.show()
+                            }
                     )
 
-                    // PRIORIDAD Dropdown
+                    // Prioridad
                     ExposedDropdownMenuBox(
                         expanded = expandedPrioridad,
                         onExpandedChange = { expandedPrioridad = !expandedPrioridad }
                     ) {
                         TextField(
                             readOnly = true,
-                            value = prioridadList.find { it.prioridadId.toString() == prioridad }?.descripcion ?: "",
+                            value = prioridadList.find { it.prioridadId.toString() == prioridad }?.descripcion
+                                ?: "",
                             onValueChange = {},
                             label = { Text("Seleccione una Prioridad") },
                             modifier = Modifier
@@ -123,13 +159,13 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                     )
 
                     OutlinedTextField(
-                        label = { Text("Descripcion") },
+                        label = { Text("Descripción") },
                         value = descripcion,
                         onValueChange = { descripcion = it },
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    // TECNICO Dropdown
+                    // Técnico
                     ExposedDropdownMenuBox(
                         expanded = expandedTecnico,
                         onExpandedChange = { expandedTecnico = !expandedTecnico }
@@ -138,7 +174,7 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                             readOnly = true,
                             value = tecnicoList.find { it.tecnicoId.toString() == tecnico }?.nombre ?: "",
                             onValueChange = {},
-                            label = { Text("Seleccione un Tecnico") },
+                            label = { Text("Seleccione un Técnico") },
                             modifier = Modifier
                                 .menuAnchor()
                                 .fillMaxWidth()
@@ -168,7 +204,7 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                     Row(modifier = Modifier.fillMaxWidth()) {
                         OutlinedButton(
                             onClick = {
-                                fecha = ""
+                                fecha = Date()
                                 prioridad = ""
                                 cliente = ""
                                 asunto = ""
@@ -184,7 +220,7 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
 
                         OutlinedButton(
                             onClick = {
-                                if (fecha.isBlank()) {
+                                if (fecha == null) {
                                     errorMessage = "La fecha no puede estar vacía."
                                     return@OutlinedButton
                                 }
@@ -219,7 +255,7 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                                         ticketDb,
                                         TicketEntity(
                                             ticketId = editando?.ticketId,
-                                            fecha = fecha,
+                                            fecha = fecha!!,
                                             prioridadId = prioridad.toIntOrNull(),
                                             cliente = cliente,
                                             asunto = asunto,
@@ -227,7 +263,9 @@ fun TicketScreen(ticketId: Int?, ticketDb: TecnicoDb) {
                                             tecnicoId = tecnico.toIntOrNull() ?: 0
                                         )
                                     )
-                                    fecha = ""
+
+
+                                    fecha = Date()
                                     prioridad = ""
                                     cliente = ""
                                     asunto = ""

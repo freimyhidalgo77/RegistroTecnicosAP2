@@ -43,6 +43,10 @@ import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
 import edu.ucne.registrotecnico.data.local.entities.TicketEntity
 import kotlinx.coroutines.launch
 
+import java.text.SimpleDateFormat
+import java.util.Locale
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketEditScreen(ticketId: Int, ticketDb: TecnicoDb, navController: NavController) {
@@ -65,7 +69,8 @@ fun TicketEditScreen(ticketId: Int, ticketDb: TecnicoDb, navController: NavContr
     LaunchedEffect(ticketId) {
         val ticket = ticketDb.ticketDao().find(ticketId)
         ticket?.let {
-            fecha = it.fecha
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            fecha = it.fecha?.let { fechaDate -> sdf.format(fechaDate) } ?: ""
             prioridad = it.prioridadId.toString()
             cliente = it.cliente
             asunto = it.asunto
@@ -219,9 +224,12 @@ fun TicketEditScreen(ticketId: Int, ticketDb: TecnicoDb, navController: NavContr
                                 }
 
                                 scope.launch {
+                                    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                                    val fechaDate = sdf.parse(fecha)
+
                                     val ticket = TicketEntity(
                                         ticketId = ticketId,
-                                        fecha = fecha,
+                                        fecha = fechaDate,
                                         prioridadId = prioridadId,
                                         cliente = cliente,
                                         asunto = asunto,
@@ -231,6 +239,7 @@ fun TicketEditScreen(ticketId: Int, ticketDb: TecnicoDb, navController: NavContr
                                     ticketDb.ticketDao().save(ticket)
                                     navController.popBackStack()
                                 }
+
                             },
                             modifier = Modifier.weight(1f)
                         ) {
