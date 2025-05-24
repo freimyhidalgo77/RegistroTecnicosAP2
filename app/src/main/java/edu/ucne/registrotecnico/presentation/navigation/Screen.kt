@@ -47,7 +47,6 @@ sealed interface Screen {
     data class PrioridadDelete(val prioridadId: Int) : Screen
 
 
-
     @Serializable
     data class Mensaje(val mensajeId: Int) : Screen
 
@@ -56,8 +55,6 @@ sealed interface Screen {
 
     @Serializable
     data class sendMessage(val mensajeId: Int) : Screen
-
-
 
 
 }
