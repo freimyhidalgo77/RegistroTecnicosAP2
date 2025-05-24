@@ -11,6 +11,7 @@ import edu.ucne.registrotecnico.data.repository.TicketRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,7 +20,7 @@ class TicketViewModel @Inject constructor(
 
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(TicketEntity(0,"",0,"","","",0))
+    private val _uiState = MutableStateFlow(TicketEntity(0, Date(),0,"","","",0))
     val uiState = _uiState.asStateFlow()
 
     fun saveTicket(ticket: TicketEntity) {
