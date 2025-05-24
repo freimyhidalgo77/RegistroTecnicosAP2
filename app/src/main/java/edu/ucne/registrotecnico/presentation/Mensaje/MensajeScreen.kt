@@ -170,6 +170,8 @@ fun MensajeCard(mensaje: MensajeEntity, onDelete: (MensajeEntity) -> Unit) {
                     }
                 )
 
+                Spacer(modifier = Modifier.height(25.dp))
+
                 Text(
                     text = mensaje.rol,
                     fontWeight = FontWeight.Bold,
@@ -182,6 +184,8 @@ fun MensajeCard(mensaje: MensajeEntity, onDelete: (MensajeEntity) -> Unit) {
 
             }
 
+            Spacer(modifier = Modifier.height(25.dp))
+
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -190,6 +194,8 @@ fun MensajeCard(mensaje: MensajeEntity, onDelete: (MensajeEntity) -> Unit) {
                     append(mensaje.descripcion)
                 }
             )
+
+            Spacer(modifier = Modifier.height(25.dp))
 
             Text(
                 text = buildAnnotatedString {
@@ -205,7 +211,7 @@ fun MensajeCard(mensaje: MensajeEntity, onDelete: (MensajeEntity) -> Unit) {
                 }
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(25.dp))
 
             IconButton(
                 onClick = { onDelete(mensaje) },
