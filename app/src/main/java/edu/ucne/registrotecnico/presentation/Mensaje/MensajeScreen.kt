@@ -1,6 +1,5 @@
 package edu.ucne.registrotecnico.presentation.Mensaje
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +14,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import edu.ucne.registrotecnico.data.local.entities.MensajeEntity
 import java.text.SimpleDateFormat
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,8 +25,8 @@ fun MensajeScreen(viewModel: MensajeViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     val mensajes by viewModel.mensajes.collectAsState()
 
-    var tecnicoId by remember { mutableStateOf("") }
     var selectRole by remember { mutableStateOf("Operador") }
+    var errorMessage by remember { mutableStateOf("") }
 
     Card(
         modifier = Modifier
@@ -70,8 +72,8 @@ fun MensajeScreen(viewModel: MensajeViewModel = hiltViewModel()) {
             }
 
             OutlinedTextField(
-                value = tecnicoId,
-                onValueChange = { tecnicoId = it },
+                value = uiState.remitente,
+                onValueChange = { viewModel.onRemitenteChange(it) },
                 label = { Text("Nombre") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -101,24 +103,36 @@ fun MensajeScreen(viewModel: MensajeViewModel = hiltViewModel()) {
 
             Button(
                 onClick = {
-                    val mensaje = MensajeEntity(
-                        mensajeId = 0,
-                        tecnicoId = tecnicoId.toIntOrNull() ?: 0,
-                        descripcion = "$selectRole: ${uiState.descripcion}",
-                        fecha = Date()
-                    )
-                    viewModel.save(mensaje)
+                    if (uiState.remitente.isBlank() || uiState.descripcion.isBlank()) {
+                        errorMessage = "Todos los campos son obligatorios"
+                    } else {
+                        errorMessage = ""
+                        viewModel.save()
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Guardar")
             }
 
+            if (errorMessage.isNotEmpty()) {
+                Text(
+                    text = errorMessage,
+                    color = Color.Red,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(mensajes) { mensaje ->
-                    MensajeCard(mensaje = mensaje)
+                    MensajeCard(
+                        mensaje = mensaje,
+                        onDelete = { viewModel.deleteMensaje(it) } // Corrección aquí
+                    )
                 }
             }
         }
@@ -126,41 +140,46 @@ fun MensajeScreen(viewModel: MensajeViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun MensajeCard(mensaje: MensajeEntity) {
+fun MensajeCard(mensaje: MensajeEntity, onDelete: (MensajeEntity) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = "Descripción: ${mensaje.descripcion}",
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Text(
-                    text = "Fecha: ${SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(mensaje.fecha)}",
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Remitente: ")
+                    }
+                    append(mensaje.remitente)
+                }
+            )
+
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Descripción: ")
+                    }
+                    append(mensaje.descripcion)
+                }
+            )
+
+            Text("Fecha: ${SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(mensaje.fecha)}")
+
             Spacer(modifier = Modifier.height(8.dp))
 
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .background(Color.Blue)
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            Button(
+                onClick = { onDelete(mensaje) },
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                modifier = Modifier.align(Alignment.End)
             ) {
-                Text(
-                    text = "Tecnico ID: ${mensaje.tecnicoId}",
-                    color = Color.White,
-                    style = MaterialTheme.typography.bodySmall
-                )
+                Text("Eliminar", color = Color.White)
             }
         }
     }
