@@ -23,6 +23,12 @@ import androidx.compose.ui.unit.sp
 import edu.ucne.registrotecnico.data.local.database.TecnicoDb
 import edu.ucne.registrotecnico.data.local.entities.MensajeEntity
 import edu.ucne.registrotecnico.data.local.entities.TicketEntity
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -88,7 +94,16 @@ fun TicketRow(
     onDelete: (TicketEntity) -> Unit,
     onVerMensajes: (TicketEntity) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
+
+    val formatter = remember {
+        SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+    }
+
+    fun formatearFecha(fecha: Date?): String {
+        return fecha?.let {
+            formatter.format(it)
+        } ?: "N/A"
+    }
 
     Card(
         shape = MaterialTheme.shapes.medium,
@@ -97,67 +112,59 @@ fun TicketRow(
             .padding(horizontal = 8.dp),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceVariant)
                 .padding(16.dp)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(
-                modifier = Modifier.weight(5f),
-                verticalArrangement = Arrangement.Center
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Ticket ID: ${ticket.ticketId ?: "N/A"}", style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold))
-                Text("Fecha: ${ticket.fecha}", fontSize = 14.sp)
-                Text("Prioridad ID: ${ticket.prioridadId}", fontSize = 14.sp)
-                Text("Cliente: ${ticket.cliente}", fontSize = 14.sp)
-                Text("Asunto: ${ticket.asunto}", fontSize = 14.sp)
-                Text("Descripcion: ${ticket.descripcion}", fontSize = 14.sp)
-                Text("Tecnico ID: ${ticket.tecnicoId}", fontSize = 14.sp)
+                Text(
+                    text = "Ticket #: ${ticket.ticketId ?: "N/A"}",
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = "Fecha: ${formatearFecha(ticket.fecha)}",
+                    fontSize = 14.sp
+                )
             }
 
-            Box(modifier = Modifier.weight(1f)) {
-                IconButton(onClick = { expanded = true }) {
-                    Icon(Icons.Filled.MoreVert, contentDescription = "Más opciones")
-                }
+            Spacer(modifier = Modifier.height(4.dp))
 
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Mensajes") },
-                        leadingIcon = { Icon(Icons.Filled.MailOutline, contentDescription = null) },
-                        onClick = {
-                            expanded = false
-                            onVerMensajes(ticket)
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Editar") },
-                        leadingIcon = { Icon(Icons.Filled.Edit, contentDescription = null) },
-                        onClick = {
-                            expanded = false
-                            onEdit(ticket)
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Eliminar") },
-                        leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = null) },
-                        onClick = {
-                            expanded = false
-                            onDelete(ticket)
-                        }
-                    )
+            Text(
+                text = "Cliente: ${ticket.cliente}",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = "Asunto: ${ticket.asunto}",
+                fontSize = 14.sp
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(onClick = { onVerMensajes(ticket) }) {
+                    Icon(Icons.Filled.MailOutline, contentDescription = "Mensajes")
+                }
+                IconButton(onClick = { onEdit(ticket) }) {
+                    Icon(Icons.Filled.Edit, contentDescription = "Editar")
+                }
+                IconButton(onClick = { onDelete(ticket) }) {
+                    Icon(Icons.Filled.Delete, contentDescription = "Eliminar")
                 }
             }
         }
     }
 }
-
 
 suspend fun saveTicket(ticketDb: TecnicoDb, ticket: TicketEntity) {
     ticketDb.ticketDao().save(ticket)
