@@ -3,13 +3,13 @@ package edu.ucne.registrotecnico.presentation.tecnico
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
-import edu.ucne.registrotecnico.data.repository.TecnicosRepository
+import edu.ucne.registrotecnico.data.repository.TecnicoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class TecnicosViewModel(
-    private val tecnicosRepository: TecnicosRepository
+    private val tecnicosRepository: TecnicoRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TecnicoEntity(0, "", 0.0))
