@@ -23,7 +23,7 @@ interface RetencionManajerApi {
     @PUT("api/Retenciones/{id}")
     suspend fun actualizarRetencion(
         @Path("id") retencionId: Int,
-        @Body articulo: RetencionDTO
+        @Body retencion: RetencionDTO
     ): RetencionDTO
 
     @DELETE("api/Retenciones/{id}")
