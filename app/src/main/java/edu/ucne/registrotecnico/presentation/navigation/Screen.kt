@@ -57,4 +57,11 @@ sealed interface Screen {
     data class sendMessage(val mensajeId: Int) : Screen
 
 
+    @Serializable
+    data object RetencionList: Screen
+
+    @Serializable
+    data class Retencion(val retencionId: Int): Screen
+
+
 }
