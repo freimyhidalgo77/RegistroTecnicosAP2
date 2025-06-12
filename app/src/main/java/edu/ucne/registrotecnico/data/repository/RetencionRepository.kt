@@ -1,6 +1,6 @@
 package edu.ucne.registrotecnico.data.repository
 
-import DataSource
+import RetencionDataSource
 import android.util.Log
 import edu.ucne.registrotecnico.data.remote.Resource
 import edu.ucne.registrotecnico.data.remote.dto.RetencionDTO
@@ -10,7 +10,7 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 class RetencionRepository @Inject constructor(
-    private val dataSource: DataSource
+    private val dataSource: RetencionDataSource
 ){
     fun getRetenciones(): Flow<Resource<List<RetencionDTO>>> = flow {
         try{
