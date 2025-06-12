@@ -1,4 +1,5 @@
-rpackage edu.ucne.registrotecnico.data.remote.retenciones
+import edu.ucne.registrotecnico.data.remote.retenciones.RetencionManajerApi
+
 
 import edu.ucne.registrotecnico.data.remote.dto.RetencionDTO
 import javax.inject.Inject
