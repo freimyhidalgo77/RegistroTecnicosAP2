@@ -12,7 +12,7 @@ import javax.inject.Inject
 class RetencionRepository @Inject constructor(
     private val dataSource: DataSource
 ){
-    fun getArticulos(): Flow<Resource<List<RetencionDTO>>> = flow {
+    fun getRetenciones(): Flow<Resource<List<RetencionDTO>>> = flow {
         try{
             emit(Resource.Loading())
             val retenciones = dataSource.getRetenciones()
