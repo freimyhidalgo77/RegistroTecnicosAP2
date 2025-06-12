@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import edu.ucne.registrotecnico.data.remote.ClienteManajerApi
 import edu.ucne.registrotecnico.data.remote.retenciones.RetencionManajerApi
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -34,7 +35,19 @@ object ApiModule {
             .create(RetencionManajerApi::class.java)
     }
 
-    //Hacer aqui lo mismo de retencion pero con clientes(Y EN LAS DEMAS CARPETAS PONER: DTO, MANAJER API,
-// RESOURCE, ETC... DE CLIENTE COMO SE HIZO CON RETENCIONES!)
+    @Provides
+    @Singleton
+    fun providesClienteManagerApi(moshi: Moshi): ClienteManajerApi {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL_Clientes)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+            .create(ClienteManajerApi::class.java)
+    }
+
+
+
+
+
 
 }
