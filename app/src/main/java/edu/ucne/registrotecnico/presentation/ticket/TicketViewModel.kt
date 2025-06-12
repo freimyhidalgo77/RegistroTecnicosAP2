@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.ucne.registrotecnico.data.local.entities.MensajeEntity
 import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
 import edu.ucne.registrotecnico.data.local.entities.TicketEntity
-import edu.ucne.registrotecnico.data.repository.TecnicosRepository
+import edu.ucne.registrotecnico.data.repository.TecnicoRepository
 import edu.ucne.registrotecnico.data.repository.TicketRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
