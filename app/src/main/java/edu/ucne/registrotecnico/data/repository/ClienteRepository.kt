@@ -1,17 +1,16 @@
 package edu.ucne.registrotecnico.data.repository
 
 import android.util.Log
-import edu.ucne.registrotecnico.data.remote.DataSource
+import edu.ucne.registrotecnico.data.remote.ClienteDataSource
 import edu.ucne.registrotecnico.data.remote.Resource
 import edu.ucne.registrotecnico.data.remote.dto.ClienteDTO
-import edu.ucne.registrotecnico.data.remote.dto.RetencionDTO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import javax.inject.Inject
 
 class ClienteRepository @Inject constructor(
-    private val dataSource: DataSource
+    private val dataSource: ClienteDataSource
 ){
     fun getClientes(): Flow<Resource<List<ClienteDTO>>> = flow {
         try{
