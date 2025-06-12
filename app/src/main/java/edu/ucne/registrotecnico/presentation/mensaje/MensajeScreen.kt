@@ -1,4 +1,4 @@
-package edu.ucne.registrotecnico.presentation.Mensaje
+package edu.ucne.registrotecnico.presentation.mensaje
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,8 +20,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import java.util.*
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
