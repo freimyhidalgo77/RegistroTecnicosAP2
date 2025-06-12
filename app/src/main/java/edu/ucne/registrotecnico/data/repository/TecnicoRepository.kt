@@ -5,7 +5,7 @@ import edu.ucne.registrotecnico.data.local.entities.TecnicoEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class TecnicosRepository  @Inject constructor(
+class TecnicoRepository  @Inject constructor(
 
     private val dao: TecnicoDao
 ) {
