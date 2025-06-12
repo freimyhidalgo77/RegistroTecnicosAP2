@@ -17,8 +17,6 @@ object ApiModule {
     private const val BASE_URL_Retenciones = "https://retencionesapi.azurewebsites.net/"
     private const val BASE_URL_Clientes = "https://clientesapi-g0a5d5ezhjcucwdy.eastus2-01.azurewebsites.net/swagger/index.html"
 
-
-
     @Provides
     @Singleton
     fun providesMoshi(): Moshi =
