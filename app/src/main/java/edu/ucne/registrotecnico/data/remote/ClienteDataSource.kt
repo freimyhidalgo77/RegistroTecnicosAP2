@@ -1,11 +1,9 @@
 package edu.ucne.registrotecnico.data.remote
 
 import edu.ucne.registrotecnico.data.remote.dto.ClienteDTO
-import edu.ucne.registrotecnico.data.remote.dto.RetencionDTO
-import edu.ucne.registrotecnico.data.remote.retenciones.RetencionManajerApi
 import javax.inject.Inject
 
-class DataSource @Inject constructor(
+class ClienteDataSource @Inject constructor(
     private val clientesManagerApi: ClienteManajerApi
 ){
     suspend fun getClientes() = clientesManagerApi.getClientes()
