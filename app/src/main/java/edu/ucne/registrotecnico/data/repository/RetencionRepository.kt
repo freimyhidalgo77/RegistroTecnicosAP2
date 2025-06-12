@@ -27,7 +27,6 @@ class RetencionRepository @Inject constructor(
 
         }
     }
-
     suspend fun update(id: Int, retencionDto: RetencionDTO) =
         dataSource.actualizarRetencion(id, retencionDto)
 
