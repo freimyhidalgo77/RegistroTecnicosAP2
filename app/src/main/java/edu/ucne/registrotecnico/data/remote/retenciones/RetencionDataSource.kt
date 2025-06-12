@@ -4,7 +4,7 @@ import edu.ucne.registrotecnico.data.remote.retenciones.RetencionManajerApi
 import edu.ucne.registrotecnico.data.remote.dto.RetencionDTO
 import javax.inject.Inject
 
-class DataSource @Inject constructor(
+class RetencionDataSource @Inject constructor(
     private val retencionesManagerApi: RetencionManajerApi
 ){
     suspend fun getRetenciones() = retencionesManagerApi.getRetenciones()
