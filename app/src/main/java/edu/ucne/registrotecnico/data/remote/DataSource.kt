@@ -16,6 +16,6 @@ class DataSource @Inject constructor(
 
     suspend fun actualizarClientes(id: Int, clienteDto: ClienteDTO) = clientesManagerApi.actualizarCliente(id, clienteDto)
 
-    suspend fun deleteCliente(id: Int) = clientesManagerApi.deleteClientes(id)
+    suspend fun deleteCliente(id: Int) = clientesManagerApi.deleteClientes( id)
 
 }
