@@ -1,9 +1,12 @@
 package edu.ucne.registrotecnico.presentation.navigation
 
 import HomeScreen
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -11,11 +14,13 @@ import androidx.navigation.toRoute
 import edu.ucne.registrotecnico.data.local.database.TecnicoDb
 import edu.ucne.registrotecnico.data.local.entities.MensajeEntity
 import edu.ucne.registrotecnico.data.local.entities.TicketEntity
-import edu.ucne.registrotecnico.presentation.Mensaje.MensajeScreen
+import edu.ucne.registrotecnico.presentation.mensaje.MensajeScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadDeleteScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadEditScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadListScreen
 import edu.ucne.registrotecnico.presentation.prioridad.PrioridadScreen
+import edu.ucne.registrotecnico.presentation.retencion.RetencionListScreen
+import edu.ucne.registrotecnico.presentation.retencion.RetencionScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoDeleteScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoEditScreen
 import edu.ucne.registrotecnico.presentation.tecnico.TecnicoListScreen
@@ -24,11 +29,13 @@ import edu.ucne.registrotecnico.presentation.ticket.TicketDeleteScreen
 import edu.ucne.registrotecnico.presentation.ticket.TicketEditScreen
 import edu.ucne.registrotecnico.presentation.ticket.TicketListScreen
 import edu.ucne.registrotecnico.presentation.ticket.TicketScreen
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun AppNavigation(tecnicoDb: TecnicoDb) {
-    val navController = rememberNavController()
+fun AppNavigation(tecnicoDb: TecnicoDb, navController: NavHostController) {
+    val scope = rememberCoroutineScope()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     NavHost(navController, startDestination = "home") {
 
@@ -179,5 +186,33 @@ fun AppNavigation(tecnicoDb: TecnicoDb) {
                 navController = navController
             )
         }
+
+        composable<Screen.RetencionList> {
+            RetencionListScreen(
+                scope = scope,
+                drawerState = drawerState,
+                createRetencion = {
+                    navController.navigate(Screen.Retencion(0))
+                },
+                onEditRetencion = { retencion ->
+                    navController.navigate(Screen.RetencionEdit(retencion))
+                },
+                onDeleteRetencion = {retencion ->
+                        navController.navigate(Screen.RetecionDdelete(retencion))
+
+                }
+            )
+        }
+
+
+        composable<Screen.Retencion>{
+            val args = it.toRoute<Screen.Retencion>()
+            RetencionScreen(
+                goBack = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
     }
 }
