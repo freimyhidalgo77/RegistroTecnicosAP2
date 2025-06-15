@@ -1,6 +1,5 @@
 package edu.ucne.registrotecnico.presentation.retencion
 
-import RetencionDataSource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -72,7 +71,7 @@ class RetencionViewModel @Inject constructor(
 
     fun onMontoChange(monto: String) {
         _uiState.update {
-            val montoDouble = monto.toDoubleOrNull()
+            val montoDouble = monto.toDoubleOrNull()?:0.0
             it.copy(
                 monto = montoDouble!!,
                 errorMessage = when {
