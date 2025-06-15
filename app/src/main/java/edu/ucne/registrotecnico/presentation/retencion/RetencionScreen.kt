@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,7 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RetencionScreen(viewModel: RetencionViewModel = hiltViewModel(), goBack: () -> Unit) {
+fun RetencionScreen(viewModel: RetencionViewModel = hiltViewModel(), goBack:() -> Unit) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -111,6 +112,40 @@ fun RetencionScreen(viewModel: RetencionViewModel = hiltViewModel(), goBack: () 
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(text = "Nuevo")
                 }
+            }
+
+
+            uiState.successMessage?.let { menssage ->
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    content = {
+                        Text(
+                            text = menssage,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = Color.Green
+                        )
+                    }
+                )
+            }
+
+            uiState.errorMessage?.let { menssage ->
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    content = {
+                        Text(
+                            text = menssage,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = Color.Red
+                        )
+                    }
+
+                )
             }
 
             if (uiState.errorMessage != null) {
