@@ -63,5 +63,11 @@ sealed interface Screen {
     @Serializable
     data class Retencion(val retencionId: Int): Screen
 
+    @Serializable
+    data class RetencionEdit(val retencionId: Int) : Screen
+
+    @Serializable
+    data class RetecionDdelete(val retencionId: Int) : Screen
+
 
 }
