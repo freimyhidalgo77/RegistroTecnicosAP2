@@ -129,7 +129,7 @@ fun HomeScreen(navController: NavHostController) {
                 modifier = Modifier
                     .size(cardSize)
                     .clickable { navController.navigate(Screen.RetencionList) },
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF4CAF50)),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF0D47A1)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Box(
@@ -144,7 +144,7 @@ fun HomeScreen(navController: NavHostController) {
                             modifier = Modifier.size(32.dp)
                         )
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text("Retenciones", fontSize = 18.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                        Text("API Retenciones", fontSize = 18.sp, color = Color.White, fontWeight = FontWeight.Bold)
                     }
                 }
             }
