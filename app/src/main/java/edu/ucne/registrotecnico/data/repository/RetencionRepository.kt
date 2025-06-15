@@ -1,13 +1,16 @@
 package edu.ucne.registrotecnico.data.repository
 
-import RetencionDataSource
 import android.util.Log
 import edu.ucne.registrotecnico.data.remote.Resource
+import edu.ucne.registrotecnico.data.remote.retenciones.RetencionDataSource
+
 import edu.ucne.registrotecnico.data.remote.dto.RetencionDTO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import javax.inject.Inject
+import javax.inject.Singleton
+
 
 class RetencionRepository @Inject constructor(
     private val dataSource: RetencionDataSource
