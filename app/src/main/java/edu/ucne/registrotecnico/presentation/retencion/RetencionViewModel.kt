@@ -29,10 +29,40 @@ class RetencionViewModel @Inject constructor(
         getRetencion()
     }
 
+    fun nuevaRetencion(){
+        _uiState.update {
+            it.copy(
+                retencionId = 0,
+                descripcion = "",
+                monto = 0.0
+            )
+        }
+    }
+
     fun saveRetencion() {
         viewModelScope.launch {
-            if (isValid()) {
+           if(_uiState.value.descripcion.isBlank() || _uiState.value.monto == null || _uiState.value.monto!! == 0.0 ){
+               _uiState.update {
+                   it.copy(
+                       errorMessage = "Los campos deben estar llenos!", successMessage = null
+                   )
+               }
+               return@launch
+           }
+            try{
                 retencionRepository.save(_uiState.value.toEntity())
+                _uiState.update {
+                    it.copy(
+                        successMessage = "La retencion se ha guardado con exito!", errorMessage = null
+                    )
+                }
+                nuevaRetencion()
+            }catch(e:Exception){
+                _uiState.update {
+                    it.copy(
+                        errorMessage = "Hubo un error al guardar la retencion", successMessage = null
+                    )
+                }
             }
         }
     }
@@ -90,7 +120,7 @@ class RetencionViewModel @Inject constructor(
                 if (retencionDto.retencionId != 0) {
                     _uiState.update {
                         it.copy(
-                            retencionId = retencionDto.retencionId,
+                            retencionId = retencionDto.retencionId!!,
                             descripcion = retencionDto.descripcion,
                             monto = retencionDto.monto
                         )
@@ -128,12 +158,7 @@ class RetencionViewModel @Inject constructor(
         }
     }
 
-    fun isValid(): Boolean {
-        return uiState.value.descripcion.isNotBlank() &&
-                uiState.value.descripcion.isNotBlank() &&
-                uiState.value.monto != 0.0
 
-    }
 }
 
 
