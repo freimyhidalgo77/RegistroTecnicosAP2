@@ -18,7 +18,9 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.background
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.ui.draw.shadow
+import edu.ucne.registrotecnico.presentation.navigation.Screen
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
@@ -122,6 +124,31 @@ fun HomeScreen(navController: NavHostController) {
                     }
                 }
             }
+
+            Card(
+                modifier = Modifier
+                    .size(cardSize)
+                    .clickable { navController.navigate(Screen.RetencionList) },
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF4CAF50)),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            imageVector = Icons.Filled.AccountBox,
+                            contentDescription = "Retenciones",
+                            tint = Color.White,
+                            modifier = Modifier.size(32.dp)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text("Retenciones", fontSize = 18.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+
         }
     }
 }
