@@ -44,8 +44,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -62,7 +65,7 @@ fun RetencionListScreen(
     viewModel: RetencionViewModel = hiltViewModel(),
     createRetencion: () -> Unit,
     onEditRetencion: (Int) -> Unit,
-    onDeleteRetencion: (Int) -> Unit
+    onDeleteRetencion: (Int) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -86,7 +89,7 @@ fun RetencionListScreen(
         createRetencion = createRetencion,
         onEditRetencion = onEditRetencion,
         onDeleteRetencion = onDeleteRetencion,
-        reloadRetenciones = { viewModel.getRetencion() }
+        reloadRetenciones = { viewModel.getRetencion() },
     )
 }
 
@@ -99,7 +102,7 @@ fun RetencionListBodyScreen(
     createRetencion: () -> Unit,
     onEditRetencion: (Int) ->  Unit,
     onDeleteRetencion: (Int) -> Unit,
-    reloadRetenciones: () -> Unit
+    reloadRetenciones: () -> Unit,
 ) {
     var find by remember { mutableStateOf("") }
 
@@ -146,7 +149,7 @@ fun RetencionListBodyScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = Color.White
                 ) {
-                    Icon(Icons.Filled.Refresh, contentDescription = "Recargar Artículos")
+                    Icon(Icons.Filled.Refresh, contentDescription = "Recargar Retenciones")
                 }
 
                 FloatingActionButton(
@@ -173,7 +176,6 @@ fun RetencionListBodyScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize()
             ) {
-                SearchFilter(find) { query -> find = query }
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -192,33 +194,6 @@ fun RetencionListBodyScreen(
             }
         }
     }
-}
-
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SearchFilter(
-    find: String,
-    onFindQueryChange: (String) -> Unit
-) {
-    TextField(
-        value = find,
-        onValueChange = { onFindQueryChange(it) },
-        label = { Text("Buscar retencion") },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp),
-        singleLine = true,
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-        ),
-        leadingIcon = {
-            Icon(Icons.Filled.Search, contentDescription = "Buscar")
-        }
-    )
 }
 
 
@@ -250,22 +225,27 @@ fun RetencionRow(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "ArtículoId: ${retencion.retencionId}",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("Tipo de retencion: ")
+                        }
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
+                            append(retencion.descripcion)
+                        }
+                    },
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
+
                 Text(
-                    text = "Descripción: ${retencion.descripcion}",
+                    text = "Retencion Id: ${retencion.retencionId}",
                     style = TextStyle(
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                 )
                 Text(
-                    text = "Costo: ${retencion.monto}",
+                    text = "Monto: ${retencion.monto}",
                     style = TextStyle(
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
