@@ -7,6 +7,7 @@ data class RetencionUIState(
     val descripcion: String = "",
     val monto: Double = 0.0,
     val isLoading: Boolean = false,
+    val successMessage:String? = null,
     val errorMessage: String? = null,
     val retenciones: List<RetencionDTO> = emptyList()
 )
