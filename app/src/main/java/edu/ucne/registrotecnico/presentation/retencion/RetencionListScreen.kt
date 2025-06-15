@@ -56,7 +56,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun ArticuloListScreen(
+fun RetencionListScreen(
     drawerState: DrawerState,
     scope: CoroutineScope,
     viewModel: RetencionViewModel = hiltViewModel(),
