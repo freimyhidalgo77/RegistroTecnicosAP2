@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import androidx.room.*
 import dagger.hilt.android.AndroidEntryPoint
 import edu.ucne.registrotecnico.data.local.database.TecnicoDb
@@ -43,8 +44,9 @@ class MainActivity : ComponentActivity() {
         ).fallbackToDestructiveMigration().build()
 
         setContent {
+            val nav = rememberNavController()
             RegistroTecnicoTheme {
-                AppNavigation(tecnicoDb)
+                AppNavigation(tecnicoDb, navController = nav)
             }
         }
     }
